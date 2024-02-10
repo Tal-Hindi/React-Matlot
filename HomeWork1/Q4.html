@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+/>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Point</title>
+  </head>
+  <body>
+    <div id="point-list">
+      <h2>Points:</h2>
+      <ul id="points"></ul>
+    </div>
+    <div id="totaldistance">
+      <h2>Total Distance:</h2>
+      <p id="distance"></p>
+    </div>
+
+    <script>
+      class Point {
+        constructor(x, y) {
+          this.x = x;
+          this.y = y;
+        }
+
+        Show() {
+          return `(${this.x},${this.y})`;
+        }
+        Equals(p) {
+          return this.x == p.x && this.y == p.y;
+        }
+      }
+
+      function CheckP(arr, valueX, valueY) {
+        for (var i = 0; i < arr.length; i++) {
+          if (arr[i].x == valueX && arr[i].y == valueY) return true;
+        }
+        return false;
+      }
+
+      function CheckPObject(arr, objP) {
+        for (var i = 0; i < arr.length; i++) {
+          if (arr[i].Equals(objP)) return true;
+        }
+        return false;
+      }
+
+      function Distance(objp1, objp2) {
+        //auxiliary function
+        var disX = objp1.x - objp2.x;
+        var disY = objp1.y - objp2.y;
+
+        return Math.sqrt(disX ** 2 + disY ** 2);
+      }
+
+      function TripRoute(arr) {
+        var total = 0;
+        for (var i = 0; i < arr.length; i++) {
+          if (arr[i + 1] != undefined) total += Distance(arr[i], arr[i + 1]);
+        }
+        return total;
+      }
+
+      p1 = new Point(0, 0);
+      p2 = new Point(2, 4);
+      p3 = new Point(5, 1);
+      p4 = new Point(8, 5);
+
+      const points = [p1, p2, p3, p4];
+
+      const pointList = document.getElementById("points");
+      points.forEach((point) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = point.Show();
+        pointList.appendChild(listItem);
+      });
+      //Distance document output
+      const distanceText = document.getElementById("distance");
+      distanceText.textContent = `${TripRoute(points)}`;
+
+      //example for Q4.2.1 True
+      const xToCheck = 2;
+      const yToCheck = 4;
+      const isPointInArray1 = CheckP(points, xToCheck, yToCheck);
+      console.log(
+        `Is point (${xToCheck}, ${yToCheck}) in the array? ${isPointInArray1}`
+      );
+      //example for Q4.2.2 -> False
+      const xToCheck1 = 9;
+      const yToCheck2 = 1;
+      const isPointInArray2 = CheckP(points, xToCheck1, yToCheck2);
+      console.log(
+        `Is point (${xToCheck1}, ${yToCheck2}) in the array? ${isPointInArray2}`
+      );
+
+      ////example for Q4.3.1 -> True
+      const pointToCheck = new Point(2, 4);
+      const isPointInArray3 = CheckPObject(points, pointToCheck);
+      console.log(
+        `Is point (${pointToCheck.x}, ${pointToCheck.y}) in the array? ${isPointInArray3}`
+      );
+      //example for Q4.3.2 -> False
+      const pointToCheck1 = new Point(1, 7);
+      const isPointInArray4 = CheckPObject(points, pointToCheck1);
+      console.log(
+        `Is point (${pointToCheck1.x}, ${pointToCheck1.y}) in the array? ${isPointInArray4}`
+      );
+    </script>
+  </body>
+</html>

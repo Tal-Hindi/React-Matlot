@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+/>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Duck</title>
+  </head>
+  <body>
+    <h1>Create a Duck</h1>
+
+    <form id="duckForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required /><br />
+
+      <label for="color">Color:</label>
+      <input type="text" id="color" name="color" required /><br />
+
+      <label for="age">Age:</label>
+      <input type="text" id="age" name="age" required /><br />
+
+      <label for="weight">Weight:</label>
+      <input type="text" id="weight" name="weight" required /><br />
+
+      <label for="photo">Photo:</label>
+      <input type="file" id="photo" name="photo" accept="image/*" required /><br />
+
+      <button type="submit" id="submitBtn">Create Duck</button>
+    </form>
+
+    <div id="duckDetails"></div>
+
+    <button id="showButton" hidden>Show</button>
+    <button id="quackButton" hidden>Quack</button>
+
+    <script>
+      class Duck {
+        constructor(name, color, age, weight, photo) {
+          this.name = name;
+          this.color = color;
+          this.age = age;
+          this.weight = weight;
+          this.photo = photo;
+        }
+
+        Show() {
+          document.getElementById("duckDetails").innerHTML = "";
+
+          const duckImage = document.createElement("img");
+          duckImage.src = this.photo;
+
+          duckImage.width = 200; 
+          duckImage.height = 150;
+
+          var str =
+            "Duck detalis - name: " +
+            this.name +
+            " color: " +
+            this.color +
+            " age: " +
+            this.age +
+            " weight: " +
+                this.weight;
+
+          let ph = document.createElement("p");
+          ph.textContent = str;
+
+          document.getElementById("duckDetails").appendChild(ph);
+          document.getElementById("duckDetails").appendChild(duckImage);
+        }
+
+        Quack() {
+          document.getElementById("duckDetails").innerHTML = "";
+
+          var numbersOfQuack = (this.weight * this.age) / 2;
+          var str = "";
+            for (var i = 0; i < numbersOfQuack; i++) {
+            str += "Quack! ";
+            }
+
+          let ph = document.createElement("p");
+          ph.textContent = str;
+          document.getElementById("duckDetails").appendChild(ph);
+
+          const audio = new Audio("quack_5.mp3");
+          let playCount = 0;
+
+          audio.addEventListener("ended", function () {
+            playCount++;
+            if (playCount < 3) {
+              audio.currentTime = 0;
+              audio.play();
+            }
+          });
+          audio.play();
+        }
+      }
+
+      document.getElementById("duckForm").addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const name = document.getElementById("name").value;
+          const color = document.getElementById("color").value;
+          const age = parseInt(document.getElementById("age").value);
+          const weight = parseInt(document.getElementById("weight").value);
+          const photoInput = document.querySelector("#photo");
+
+          if (photoInput.files && photoInput.files.length > 0) {
+              const photoFile = photoInput.files[0];
+
+              const reader = new FileReader();
+              reader.onload = function (e) {
+                  const photo = e.target.result;
+
+                  duck = new Duck(name, color, age, weight, photo);
+
+                  document.getElementById("showButton").removeAttribute("hidden");
+                  document.getElementById("quackButton").removeAttribute("hidden");
+                  document.getElementById("submitBtn").disabled = true;
+
+              };
+              reader.readAsDataURL(photoFile);
+          }
+
+          else {
+                  alert("Please select a photo");
+               }
+      });
+
+        document.querySelector("#showButton").addEventListener("click", () => duck.Show());
+        document.querySelector("#quackButton").addEventListener("click", () => duck.Quack());
+
+    </script>
+  </body>
+</html>

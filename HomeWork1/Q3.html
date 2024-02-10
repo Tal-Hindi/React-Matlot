@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+/>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Clock</title>
+  </head>
+  <body>
+    <h3>Add five clocks</h3>
+
+    <form id="ClockForm">
+      <label for="hours">Hours:</label>
+      <input type="number" class="clearBtn" id="hours" required /><br />
+
+      <label for="minutes">Minutes:</label>
+      <input type="number" class="clearBtn" id="minutes" required /><br />
+
+      <label for="seconds">Seconds:</label>
+      <input type="number" class="clearBtn" id="seconds" required /><br />
+
+      <label for="country">Country:</label>
+      <input type="text" class="clearBtn" id="country" required /><br />
+
+      <button type="submit" id="submitBtn">Add Clock</button>
+    </form>
+
+    <div id="clockPh"></div>
+    <script>
+      ClockArr = [];
+
+      class Clock {
+        constructor(hours, minutes, seconds, country) {
+          this.hours = hours;
+          this.minutes = minutes;
+          this.seconds = seconds;
+          this.country = country;
+        }
+        // auxiliary function 
+        FormatDigit(value) {
+          return value < 10 ? `0${value}` : value;
+        }
+
+        Show() {
+          return `${this.FormatDigit(this.hours)}:${this.FormatDigit(this.minutes)}:${this.FormatDigit(this.seconds)}`;
+        }
+
+        ConvertToSeconds() {
+          return this.hours * 3600 + this.minutes * 60 + this.seconds;
+        }
+      }
+
+        document.getElementById("ClockForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+          
+
+          const hours = parseInt(document.getElementById("hours").value);
+          const minutes = parseInt(document.getElementById("minutes").value);
+          const seconds = parseInt(document.getElementById("seconds").value);
+          const country = document.getElementById("country").value;
+
+          const watch = new Clock(hours, minutes, seconds, country);
+
+          ClockArr.push(watch);
+          PrintArr();
+        });
+
+      function PrintArr() {
+        if (ClockArr.length == 5) {
+          str = "";
+          for (var i = 0; i < ClockArr.length; i++) {
+              str += `Clock ${i + 1}: Country: ${ClockArr[i].country} Time: ${ClockArr[i].Show()} Time in seconds: 
+              ${ClockArr[i].ConvertToSeconds()} <br />`;
+              
+          }
+          let ph = document.createElement("p");
+          ph.innerHTML = str;
+          document.getElementById("clockPh").appendChild(ph);
+        }
+      }
+
+        document.getElementById("ClockForm").addEventListener("submit", function (event) {
+        
+            var inputElement = document.getElementsByClassName("clearBtn");
+            var Myarr = Array.from(inputElement);
+            Myarr.forEach(function (element) {
+                element.value = "";
+            });
+        });
+         
+    </script>
+  </body>
+</html>
