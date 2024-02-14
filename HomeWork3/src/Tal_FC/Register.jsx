@@ -12,19 +12,26 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import MenuItem from '@mui/material/MenuItem';
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+const cityList = [
+    {
+      value: 'tel aviv',
+      label: 'tel aviv',
+    },
+    {
+      value: 'hadera',
+      label: 'hadera',
+    },
+    {
+      value: 'BTC',
+      label: '฿',
+    },
+    {
+      value: 'JPY',
+      label: '¥',
+    },
+  ];
 
 const defaultTheme = createTheme();
 
@@ -141,15 +148,31 @@ export default function Register() {
                   name="birthdate"
                 />
               </Grid>
-              <Grid item xs={12} >
+              <Grid item xs={12}>
                 <TextField
                   required
+                  select
                   fullWidth
+                  autoComplete='on'
+                  helperText="Please select your city"
                   id="city"
-                  label="city"
                   name="city"
-                />
+                  label="Select city"
+                >
+                
+                  {cityList.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                  </TextField>
+                  
+                
               </Grid>
+
+              
+          
+       
               
               <Grid item xs={12} sm={6}>
               <TextField
@@ -202,7 +225,7 @@ export default function Register() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
+        
       </Container>
     </ThemeProvider>
   );
