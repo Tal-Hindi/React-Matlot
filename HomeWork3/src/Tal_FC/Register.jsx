@@ -10,30 +10,85 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Autocomplete from "@mui/material/Autocomplete";
 import * as data from "../israel_cities_names_and__geometric_data.json";
+import React, { useState } from 'react'
 
 const city_options = data.default; // Access the default export from the imported module
 
 const defaultTheme = createTheme();
 
 export default function Register() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      firstName: data.get("firstName"),
-      lastName: data.get("lastName"),
-      email: data.get("email"),
-      username: data.get("username"),
-      password: data.get("password"),
-      passwordAuthentication: data.get("passwordAuthentication"),
-      birthdate: data.get("birthdate"),
-      city: data.get("city"),
-      address: data.get("address"),
-      picture: data.get("picture"), // This will be the uploaded file
-      number: data.get("number"),
-      allowExtraEmails: data.get("allowExtraEmails"),
+
+
+  const [userDetails, setUserDetails] = useState({
+    username: "",
+    password: "",
+    passwordAuthentication: "",
+    picture: "",
+    firstname: "",
+    lastname: "",
+    email: "",
+    birthday: "",
+    city: "",
+    street: "",
+    houseNumber: ""
+})
+
+
+const [userIdCounter, setUserIdCounter] = useState(1);
+
+function generateUniqueId() {
+    const newId = userIdCounter;
+    setUserIdCounter(prevCounter => prevCounter + 1);
+    return newId;
+}
+
+function handleChange(event) {
+
+    const { value, id } = event.target;  //Destructre
+
+    //takes the prev value of the entire state and changes the current e element 
+    setUserDetails(prevValue => ({
+        ...prevValue,
+        [id]: value
+
+    }));
+
+}
+
+
+function registerUser(event) {
+    event.preventDefault(); // Prevents the default form submission behavior
+
+    // Create a new user object
+    const newUser = {
+        id: generateUniqueId(),
+        ...userDetails
+    };
+
+    // Get existing users from localStorage
+    const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
+
+    // Add the new user to the list
+    const updatedUsers = [...existingUsers, newUser];
+
+    // Update localStorage with the updated list of users
+    localStorage.setItem('users', JSON.stringify(updatedUsers));
+
+    // Reset the form after successful registration
+    setUserDetails({
+        username: "",
+        password: "",
+        passwordAuthentication: "",
+        picture: "",
+        firstname: "",
+        lastname: "",
+        email: "",
+        birthday: "",
+        city: "",
+        street: "",
+        houseNumber: ""
     });
-  };
+}
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -51,34 +106,36 @@ export default function Register() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            Sign Up
           </Typography>
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={registerUser}
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
+                  name="firstname"
                   required
                   fullWidth
-                  id="firstName"
+                  id="firstname"
                   label="First Name"
                   autoFocus
+                  onBlur={handleChange}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
+                  id="lastname"
                   label="Last Name"
-                  name="lastName"
+                  name="lastname"
                   autoComplete="family-name"
+                  onBlur={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -89,6 +146,7 @@ export default function Register() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onBlur={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -98,6 +156,7 @@ export default function Register() {
                   id="username"
                   label="Username"
                   name="username"
+                  onBlur={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -109,34 +168,39 @@ export default function Register() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onBlur={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
+                  id="passwordAuthentication"
                   name="passwordAuthentication"
                   label="Password Authentication"
                   type="password"
+                  onBlur={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="birthdate"
-                  label="Birthdate"
+                  id="birthday"
+                  label="Birthday"
                   type="date"
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  name="birthdate"
+                  name="birthday"
+                  onBlur={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
                 <Autocomplete
                   disablePortal
-                  id="combo-box-city"
+                  id="city"
+                  onBlur={handleChange}
                   options={city_options || []}
                   getOptionLabel={(option) => option.name} // Assuming "name" is the property you want to display
                   renderInput={(params) => (
@@ -151,15 +215,17 @@ export default function Register() {
                   id="street"
                   label="Street"
                   name="Street"
+                  onBlur={handleChange}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
                   fullWidth
-                  id="num"
+                  id="houseNumber"
                   label="number"
                   name="number"
+                  onBlur={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -168,10 +234,11 @@ export default function Register() {
                   id="picture"
                   type="file"
                   name="picture"
+                  onBlur={handleChange}
                   style={{ display: "none" }}
                 />
                 <label htmlFor="picture">
-                  <Button variant="contained" component="span">
+                  <Button onChange={handleChange} variant="contained" component="span">
                     Upload Picture
                   </Button>
                 </label>

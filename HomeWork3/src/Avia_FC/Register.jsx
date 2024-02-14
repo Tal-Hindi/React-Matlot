@@ -49,14 +49,14 @@ export default function Register() {
             ...userDetails
         };
 
-        // Get existing users from sessionStorage
-        const existingUsers = JSON.parse(sessionStorage.getItem('users')) || [];
+        // Get existing users from localStorage
+        const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
 
         // Add the new user to the list
         const updatedUsers = [...existingUsers, newUser];
 
-        // Update sessionStorage with the updated list of users
-        sessionStorage.setItem('users', JSON.stringify(updatedUsers));
+        // Update localStorage with the updated list of users
+        localStorage.setItem('users', JSON.stringify(updatedUsers));
 
         // Reset the form after successful registration
         setUserDetails({
