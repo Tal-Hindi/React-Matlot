@@ -2,35 +2,16 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import MenuItem from "@mui/material/MenuItem";
+import Autocomplete from "@mui/material/Autocomplete";
+import * as data from "../israel_cities_names_and__geometric_data.json";
 
-const cityList = [
-  {
-    value: "tel aviv",
-    label: "tel aviv",
-  },
-  {
-    value: "hadera",
-    label: "hadera",
-  },
-  {
-    value: "BTC",
-    label: "฿",
-  },
-  {
-    value: "JPY",
-    label: "¥",
-  },
-];
+const city_options = data.default; // Access the default export from the imported module
 
 const defaultTheme = createTheme();
 
@@ -153,22 +134,15 @@ export default function Register() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  required
-                  select
-                  fullWidth
-                  autoComplete="on"
-                  helperText="Please select your city"
-                  id="city"
-                  name="city"
-                  label="Select city"
-                >
-                  {cityList.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-city"
+                  options={city_options || []}
+                  getOptionLabel={(option) => option.name} // Assuming "name" is the property you want to display
+                  renderInput={(params) => (
+                    <TextField {...params} label="City" />
+                  )}
+                />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField

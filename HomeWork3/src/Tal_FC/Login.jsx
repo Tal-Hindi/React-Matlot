@@ -53,7 +53,6 @@ export default function SignIn() {
               label="User name"
               name="username"
               autoComplete="username"
-              autoFocus
             />
             <TextField
               margin="normal"
