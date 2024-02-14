@@ -141,13 +141,23 @@ export default function Register() {
                   name="birthdate"
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} >
                 <TextField
                   required
                   fullWidth
                   id="city"
-                  label="City"
+                  label="city"
                   name="city"
+                />
+              </Grid>
+              
+              <Grid item xs={12} sm={6}>
+              <TextField
+                  required
+                  fullWidth
+                  id="num"
+                  label="number"
+                  name="number"
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -173,22 +183,7 @@ export default function Register() {
                   </Button>
                 </label>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="number"
-                  label="Phone Number"
-                  name="number"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                  name="allowExtraEmails"
-                />
-              </Grid>
+             
             </Grid>
             <Button
               type="submit"
