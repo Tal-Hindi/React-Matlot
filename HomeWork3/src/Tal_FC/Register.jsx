@@ -1,24 +1,29 @@
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Autocomplete from "@mui/material/Autocomplete";
-import * as data from "../israel_cities_names_and__geometric_data.json";
 import React, { useState } from "react";
+import Swal from "sweetalert2";
 import { useForm } from "react-hook-form";
+import {
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  Grid,
+  Box,
+  Typography,
+  Container,
+  ThemeProvider,
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { createTheme } from "@mui/material/styles";
+import * as data from "../israel_cities_names_and__geometric_data.json";
 import "../index.css";
 
-const city_options = data.default; // Access the default export from the imported module
+// Import city data
+const cityOptions = data.default;
 
+// Create default MUI theme
 const defaultTheme = createTheme();
 
-export default function Register() {
+const Register = () => {
   const [userDetails, setUserDetails] = useState({
     username: "",
     password: "",
@@ -33,38 +38,45 @@ export default function Register() {
     houseNumber: "",
   });
 
+  // React Hook Form setup
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
-    setValue,
+    reset,
   } = useForm();
 
+  // Handle form submission
   const onSubmit = (data) => {
     registerUser(data);
-    // You can perform further actions here after form submission
   };
 
+  // Register user and save data to localStorage
   const registerUser = (userData) => {
-    // Get existing users from localStorage
     const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
-
-    // Add the new user data to the list, including the picture property
     const updatedUsers = [
       ...existingUsers,
       { ...userData, picture: userDetails.picture },
     ];
 
-    // Update localStorage with the updated list of users
     localStorage.setItem("users", JSON.stringify(updatedUsers));
 
-    // Reset the form after successful registration
+    Swal.fire({
+      icon: "success",
+      title: "Registration Successful",
+      text: "You have successfully registered!",
+    });
+
+    reset();
+
+    // Reset form fields after successful registration
     setUserDetails({
+      ...userDetails,
       username: "",
       password: "",
       passwordAuthentication: "",
-      picture: "", // Clear the picture data from state
+      picture: "",
       firstname: "",
       lastname: "",
       email: "",
@@ -75,27 +87,23 @@ export default function Register() {
     });
   };
 
+  // Handle image upload
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
 
     reader.onloadend = () => {
-      const imageDataUrl = reader.result; // Get the data URL representing the file
-
-      // Update userDetails state with the picture URL
+      const imageDataUrl = reader.result;
       setUserDetails((prevUserDetails) => ({
         ...prevUserDetails,
-        picture: imageDataUrl, // Set the picture URL directly
+        picture: imageDataUrl,
       }));
     };
 
-    // Read the file as a data URL
     if (file) {
       reader.readAsDataURL(file);
     }
   };
-
-  // Read the file as a data URL
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -122,6 +130,7 @@ export default function Register() {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
+              {/* First Name */}
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
@@ -144,6 +153,7 @@ export default function Register() {
                   <p className="errorC">{errors.firstname.message}</p>
                 )}
               </Grid>
+              {/* Last Name */}
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
@@ -165,6 +175,7 @@ export default function Register() {
                   <p className="errorC">{errors.lastname.message}</p>
                 )}
               </Grid>
+              {/* Email */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -185,6 +196,7 @@ export default function Register() {
                   <p className="errorC">{errors.email.message}</p>
                 )}
               </Grid>
+              {/* Username */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -209,6 +221,7 @@ export default function Register() {
                   <p className="errorC">{errors.username.message}</p>
                 )}
               </Grid>
+              {/* Password */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -232,6 +245,7 @@ export default function Register() {
                   <p className="errorC">{errors.password.message}</p>
                 )}
               </Grid>
+              {/* Password Authentication */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -253,6 +267,7 @@ export default function Register() {
                   </p>
                 )}
               </Grid>
+              {/* Birthday */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -292,22 +307,9 @@ export default function Register() {
                   <p className="errorC">{errors.birthday.message}</p>
                 )}
               </Grid>
-              <Grid item xs={12}>
-                <Autocomplete
-                  disablePortal
-                  id="city"
-                  options={city_options || []}
-                  getOptionLabel={(option) => option.name}
-                  renderInput={(params) => (
-                    <TextField {...params} label="City" />
-                  )}
-                  onChange={(event, value) => {
-                    setValue("city", value ? value.name : "");
-                  }}
-                />
-                {errors.city && <p className="errorC">{errors.city.message}</p>}
-              </Grid>
-
+              {/* City */}
+              <Grid item xs={12}></Grid>
+              {/* Street */}
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
@@ -327,6 +329,7 @@ export default function Register() {
                   <p className="errorC">{errors.street.message}</p>
                 )}
               </Grid>
+              {/* House Number */}
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
@@ -346,6 +349,7 @@ export default function Register() {
                   <p className="errorC">{errors.houseNumber.message}</p>
                 )}
               </Grid>
+              {/* Picture Upload */}
               <Grid item xs={12}>
                 <input
                   accept="image/jpeg"
@@ -374,7 +378,7 @@ export default function Register() {
                 )}
               </Grid>
             </Grid>
-
+            {/* Submit Button */}
             <Button
               type="submit"
               fullWidth
@@ -388,4 +392,6 @@ export default function Register() {
       </Container>
     </ThemeProvider>
   );
-}
+};
+
+export default Register;
