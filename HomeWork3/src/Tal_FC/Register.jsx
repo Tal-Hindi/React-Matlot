@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { useForm } from "react-hook-form";
 import {
@@ -11,6 +11,7 @@ import {
   Typography,
   Container,
   ThemeProvider,
+  Autocomplete,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme } from "@mui/material/styles";
@@ -45,6 +46,7 @@ const Register = () => {
     formState: { errors },
     watch,
     reset,
+    setValue,
   } = useForm();
 
   // Handle form submission
@@ -307,8 +309,36 @@ const Register = () => {
                   <p className="errorC">{errors.birthday.message}</p>
                 )}
               </Grid>
+
               {/* City */}
-              <Grid item xs={12}></Grid>
+              {/* TODO Fix the autocomplete onChange validation */}
+              <Grid item xs={12}>
+                <Autocomplete
+                  disablePortal
+                  id="city"
+                  label="City"
+                  options={cityOptions || []}
+                  getOptionLabel={(option) => option.name}
+                  onChange={(event, value) =>
+                    setValue("city", value ? value.name : "")
+                  } // Update value when an option is selected
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="City"
+                      {...register("city", {
+                        required: "City is required",
+                        pattern: {
+                          value: /^[א-ת\s]*$/, // Regular expression to match Hebrew letters and spaces
+                          message: "Only Hebrew letters are allowed",
+                        },
+                      })}
+                    />
+                  )}
+                />
+                {errors.city && <p className="errorC">{errors.city.message}</p>}
+              </Grid>
+
               {/* Street */}
               <Grid item xs={12} sm={6}>
                 <TextField
