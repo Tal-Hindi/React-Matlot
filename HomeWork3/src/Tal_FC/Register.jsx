@@ -104,29 +104,29 @@ const registerUser = (event) => {
 
 
     // Reset the form after successful registration
-    setUserSignUpDetails({
-      username: "",
-      password: "",
-      passwordAuthentication: "",
-      picture: "",
-      firstname: "",
-      lastname: "",
-      email: "",
-      birthday: "",
-      city: "",
-      street: "",
-      houseNumber: ""
-  });
+    
 }
 
 const validate = (values) => {
-  const errors ={}
- // const emailregex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-  if(!values.username){
-    errors.username = "Username is required!"
+  const errors = {};
+
+  const requiredFields = ['username', 'password', 'firstname','lastname','passwordAuthentication','email',
+  'city','street','houseNumber','picture','birthday'];
+
+  requiredFields.forEach((field) => {
+    if (!values[field]) {
+      errors[field] = 'This is a required field!';
+    }
+  });
+
+  // Additional validations...
+  if (values.email && !values.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i)) {
+    errors.email = 'Invalid email address';
   }
+
   return errors;
-}
+};
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -156,7 +156,7 @@ const validate = (values) => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
-                  id="fiestname"
+                  id="firstname"
                   name="firstname"
                   required
                   fullWidth
@@ -165,7 +165,7 @@ const validate = (values) => {
                   onChange={handleChange}
                   value={userSignUpDetails.firstname}
                 />
-                
+                <p style={{color:"red"}}>{formErrors.firstname}</p>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -177,6 +177,7 @@ const validate = (values) => {
                   onChange={handleChange}
                   value={userSignUpDetails.lastname}
                 />
+                <p style={{color:"red"}}>{formErrors.lastname}</p>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -188,6 +189,7 @@ const validate = (values) => {
                   onChange={handleChange}
                   value={userSignUpDetails.email}
                 />
+                <p style={{color:"red"}}>{formErrors.email}</p>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -212,6 +214,7 @@ const validate = (values) => {
                   onChange={handleChange}
                   value={userSignUpDetails.password}
                 />
+                <p style={{color:"red"}}>{formErrors.password}</p>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -223,6 +226,7 @@ const validate = (values) => {
                   onChange={handleChange}
                   value={userSignUpDetails.passwordAuthentication}
                 />
+                <p style={{color:"red"}}>{formErrors.passwordAuthentication}</p>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -237,19 +241,22 @@ const validate = (values) => {
                   onChange={handleChange}
                   value={userSignUpDetails.birthday}
                 />
+                <p style={{color:"red"}}>{formErrors.birthday}</p>
               </Grid>
               <Grid item xs={12}>
                 <Autocomplete
                   disablePortal
                   id="city"
-                  onChange={handleChange}
                   
+                  onChange={handleChange}
                   options={city_options || []}
-                  getOptionLabel={(option) => option.name} // Assuming "name" is the property you want to display
+                  getOptionLabel={(option) => option.name} 
+                
                   renderInput={(params) => (
-                    <TextField {...params} label="City" value={userSignUpDetails.city} />
+                    <TextField {...params} label="City" value={userSignUpDetails.city}/>
                   )}
                 />
+                <p style={{color:"red"}}>{formErrors.city}</p>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -260,6 +267,7 @@ const validate = (values) => {
                   onChange={handleChange}
                   value={userSignUpDetails.street}
                 />
+                <p style={{color:"red"}}>{formErrors.street}</p>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -270,6 +278,7 @@ const validate = (values) => {
                   onChange={handleChange}
                   value={userSignUpDetails.houseNumber}
                 />
+                <p style={{color:"red"}}>{formErrors.houseNumber}</p>
               </Grid>
               <Grid item xs={12}>
                 <input
@@ -285,6 +294,7 @@ const validate = (values) => {
                     Upload Picture
                   </Button>
                 </label>
+                <p style={{color:"red"}}>{formErrors.picture}</p>
               </Grid>
             </Grid>
             <Button
