@@ -8,17 +8,45 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useState } from 'react'
 
 const defaultTheme = createTheme();
 
-export default function SignIn() {
+export default function Login() {
+
+  const [userLoginDetails, setUserLoginDetails] = useState({
+    username: "",
+    password: ""
+  })
+
+  function handleChange(event) {
+
+    const { value, id } = event.target;  //Destructre
+
+    //takes the prev value of the entire state and changes the current e element 
+    setUserLoginDetails(prevValue => ({
+        ...prevValue,
+        [id]: value,
+
+    }));
+
+}
+
+ //loginUser - פונקציה המקבלת שם משתמש וסיסמה ובודקת אם קיים משתמש שפרטיו זהים - במידה וכן יש לשמור את כל פרטי המשתמש בסשן סטורג
+
   const handleSubmit = (event) => {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get("email"),
+      username: data.get("username"),
       password: data.get("password"),
     });
+
+    setUserLoginDetails({
+      username:"",
+      password:""
+  })
   };
 
   return (
@@ -37,7 +65,7 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Login
           </Typography>
           <Box
             component="form"
@@ -52,7 +80,9 @@ export default function SignIn() {
               id="username"
               label="User name"
               name="username"
+              onChange={handleChange}
               autoComplete="username"
+              value={userLoginDetails.username}
             />
             <TextField
               margin="normal"
@@ -63,6 +93,8 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={handleChange}
+              value={userLoginDetails.password}
             />
             <Button
               type="submit"
@@ -70,7 +102,7 @@ export default function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Login
             </Button>
           </Box>
         </Box>

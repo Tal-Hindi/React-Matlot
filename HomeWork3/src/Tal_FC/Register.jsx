@@ -11,6 +11,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Autocomplete from "@mui/material/Autocomplete";
 import * as data from "../israel_cities_names_and__geometric_data.json";
 import React, { useState } from 'react'
+import { loadUsers } from "./UserLocalStorage";
 
 const city_options = data.default; // Access the default export from the imported module
 
@@ -18,8 +19,8 @@ const defaultTheme = createTheme();
 
 export default function Register() {
 
-//hey
-  const [userDetails, setUserDetails] = useState({
+//creating full details state
+  const [userSignUpDetails, setUserSignUpDetails] = useState({
     username: "",
     password: "",
     passwordAuthentication: "",
@@ -33,40 +34,65 @@ export default function Register() {
     houseNumber: ""
 })
 
+const [userIdCounter, setUserIdCounter] = useState(1); // id for each user
 
-const [userIdCounter, setUserIdCounter] = useState(1);
+const [formErrors, setFormErrors] = useState({})
 
-function generateUniqueId() {
+const generateUniqueId = () => { //increase id counter every time a new user is created
     const newId = userIdCounter;
     setUserIdCounter(prevCounter => prevCounter + 1);
     return newId;
 }
 
-function handleChange(event) {
+function handleFileInputChange(event) {
+  const { files } = event.target;
+
+  // handle only the first selected file
+  const selectedFile = files && files.length > 0 ? files[0] : null;
+
+  if (selectedFile) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result;
+
+      setUserSignUpDetails((prevValue) => ({
+        ...prevValue,
+        picture: base64String, // Update the 'picture' field with the base64 string
+      }));
+    };
+
+    reader.readAsDataURL(selectedFile); // Convert the file to base64
+  }
+}
+
+
+const handleChange = (event) => {
 
     const { value, id } = event.target;  //Destructre
 
     //takes the prev value of the entire state and changes the current e element 
-    setUserDetails(prevValue => ({
+    setUserSignUpDetails(prevValue => ({
         ...prevValue,
-        [id]: value
+        [id]: value,
 
     }));
 
 }
 
 
-function registerUser(event) {
+const registerUser = (event) => {
     event.preventDefault(); // Prevents the default form submission behavior
 
     // Create a new user object
     const newUser = {
         id: generateUniqueId(),
-        ...userDetails
+        ...userSignUpDetails
     };
 
+    
+
     // Get existing users from localStorage
-    const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
+     const existingUsers = loadUsers();
 
     // Add the new user to the list
     const updatedUsers = [...existingUsers, newUser];
@@ -74,20 +100,32 @@ function registerUser(event) {
     // Update localStorage with the updated list of users
     localStorage.setItem('users', JSON.stringify(updatedUsers));
 
+    setFormErrors(validate(userSignUpDetails));
+
+
     // Reset the form after successful registration
-    setUserDetails({
-        username: "",
-        password: "",
-        passwordAuthentication: "",
-        picture: "",
-        firstname: "",
-        lastname: "",
-        email: "",
-        birthday: "",
-        city: "",
-        street: "",
-        houseNumber: ""
-    });
+    setUserSignUpDetails({
+      username: "",
+      password: "",
+      passwordAuthentication: "",
+      picture: "",
+      firstname: "",
+      lastname: "",
+      email: "",
+      birthday: "",
+      city: "",
+      street: "",
+      houseNumber: ""
+  });
+}
+
+const validate = (values) => {
+  const errors ={}
+ // const emailregex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+  if(!values.username){
+    errors.username = "Username is required!"
+  }
+  return errors;
 }
 
   return (
@@ -118,14 +156,16 @@ function registerUser(event) {
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
+                  id="fiestname"
                   name="firstname"
                   required
                   fullWidth
-                  id="firstname"
                   label="First Name"
                   autoFocus
-                  onBlur={handleChange}
+                  onChange={handleChange}
+                  value={userSignUpDetails.firstname}
                 />
+                
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -133,9 +173,9 @@ function registerUser(event) {
                   fullWidth
                   id="lastname"
                   label="Last Name"
-                  name="lastname"
                   autoComplete="family-name"
-                  onBlur={handleChange}
+                  onChange={handleChange}
+                  value={userSignUpDetails.lastname}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -144,9 +184,9 @@ function registerUser(event) {
                   fullWidth
                   id="email"
                   label="Email Address"
-                  name="email"
                   autoComplete="email"
-                  onBlur={handleChange}
+                  onChange={handleChange}
+                  value={userSignUpDetails.email}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -155,20 +195,22 @@ function registerUser(event) {
                   fullWidth
                   id="username"
                   label="Username"
-                  name="username"
-                  onBlur={handleChange}
+                  onChange={handleChange}
+                  value={userSignUpDetails.username}
                 />
+                <p style={{color:"red"}}>{formErrors.username}</p>
               </Grid>
+              
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  name="password"
                   label="Password"
                   type="password"
                   id="password"
                   autoComplete="new-password"
-                  onBlur={handleChange}
+                  onChange={handleChange}
+                  value={userSignUpDetails.password}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -176,10 +218,10 @@ function registerUser(event) {
                   required
                   fullWidth
                   id="passwordAuthentication"
-                  name="passwordAuthentication"
                   label="Password Authentication"
                   type="password"
-                  onBlur={handleChange}
+                  onChange={handleChange}
+                  value={userSignUpDetails.passwordAuthentication}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -192,19 +234,20 @@ function registerUser(event) {
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  name="birthday"
-                  onBlur={handleChange}
+                  onChange={handleChange}
+                  value={userSignUpDetails.birthday}
                 />
               </Grid>
               <Grid item xs={12}>
                 <Autocomplete
                   disablePortal
                   id="city"
-                  onBlur={handleChange}
+                  onChange={handleChange}
+                  
                   options={city_options || []}
                   getOptionLabel={(option) => option.name} // Assuming "name" is the property you want to display
                   renderInput={(params) => (
-                    <TextField {...params} label="City" />
+                    <TextField {...params} label="City" value={userSignUpDetails.city} />
                   )}
                 />
               </Grid>
@@ -214,8 +257,8 @@ function registerUser(event) {
                   fullWidth
                   id="street"
                   label="Street"
-                  name="Street"
-                  onBlur={handleChange}
+                  onChange={handleChange}
+                  value={userSignUpDetails.street}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -224,8 +267,8 @@ function registerUser(event) {
                   fullWidth
                   id="houseNumber"
                   label="number"
-                  name="number"
-                  onBlur={handleChange}
+                  onChange={handleChange}
+                  value={userSignUpDetails.houseNumber}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -233,9 +276,9 @@ function registerUser(event) {
                   accept="image/*"
                   id="picture"
                   type="file"
-                  name="picture"
-                  onBlur={handleChange}
+                  onInput={handleFileInputChange}
                   style={{ display: "none" }}
+                  value={userSignUpDetails.picture}
                 />
                 <label htmlFor="picture">
                   <Button onChange={handleChange} variant="contained" component="span">
@@ -245,6 +288,7 @@ function registerUser(event) {
               </Grid>
             </Grid>
             <Button
+            onClick={registerUser}
               type="submit"
               fullWidth
               variant="contained"
