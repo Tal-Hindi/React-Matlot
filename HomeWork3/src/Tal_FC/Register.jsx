@@ -13,6 +13,7 @@ import * as data from "../israel_cities_names_and__geometric_data.json";
 import React, { useState } from 'react'
 import { loadUsers } from "./UserLocalStorage";
 
+
 const city_options = data.default; // Access the default export from the imported module
 
 const defaultTheme = createTheme();
@@ -38,32 +39,30 @@ const [userIdCounter, setUserIdCounter] = useState(1); // id for each user
 
 const [formErrors, setFormErrors] = useState({})
 
+
+
 const generateUniqueId = () => { //increase id counter every time a new user is created
     const newId = userIdCounter;
     setUserIdCounter(prevCounter => prevCounter + 1);
     return newId;
 }
 
-function handleFileInputChange(event) {
-  const { files } = event.target;
+const handleImageChange = (event) => {
+  const file = event.target.files[0];
+  const reader = new FileReader();
 
-  // handle only the first selected file
-  const selectedFile = files && files.length > 0 ? files[0] : null;
+  reader.onloadend = () => {
+    const imageDataUrl = reader.result;
+    setUserSignUpDetails((prevUserDetails) => ({
+      ...prevUserDetails,
+      picture: imageDataUrl,
+    }));
+  };
 
-  if (selectedFile) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64String = reader.result;
-
-      setUserSignUpDetails((prevValue) => ({
-        ...prevValue,
-        picture: base64String, // Update the 'picture' field with the base64 string
-      }));
-    };
-
-    reader.readAsDataURL(selectedFile); // Convert the file to base64
+  if (file) {
+    reader.readAsDataURL(file);
   }
-}
+};
 
 
 const handleChange = (event) => {
@@ -78,9 +77,20 @@ const handleChange = (event) => {
     }));
 
 }
+const handleChangeCity = (e) =>{
+  setUserSignUpDetails(prevValue => ({
+    ...prevValue,
+    ["city"]: e.target.innerHTML,
+
+}));
+}
 
 
 const registerUser = (event) => {
+
+  if (Object.keys(validate(userSignUpDetails)).length == 0){
+
+  
     event.preventDefault(); // Prevents the default form submission behavior
 
     // Create a new user object
@@ -88,8 +98,6 @@ const registerUser = (event) => {
         id: generateUniqueId(),
         ...userSignUpDetails
     };
-
-    
 
     // Get existing users from localStorage
      const existingUsers = loadUsers();
@@ -100,10 +108,28 @@ const registerUser = (event) => {
     // Update localStorage with the updated list of users
     localStorage.setItem('users', JSON.stringify(updatedUsers));
 
-    setFormErrors(validate(userSignUpDetails));
-
-
+    setFormErrors(validate(userSignUpDetails)); 
+    
     // Reset the form after successful registration
+    setUserSignUpDetails({
+      username: "",
+      password: "",
+      passwordAuthentication: "",
+      picture: "",
+      firstname: "",
+      lastname: "",
+      email: "",
+      birthday: "",
+      city: "",
+      street: "",
+      houseNumber: ""
+    })
+
+    document.getElementById("option").innerHTML="";
+
+  }
+
+   
     
 }
 
@@ -123,6 +149,31 @@ const validate = (values) => {
   if (values.email && !values.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i)) {
     errors.email = 'Invalid email address';
   }
+  if (values.firstname && !values.firstname.match(/^[A-Za-z]+$/)) {
+    errors.firstname = 'Invalid name';
+  }
+  if (values.lastname && !values.lastname.match(/^[A-Za-z]+$/)) {
+    errors.lastname = 'Invalid name';
+  }
+  if (values.username && !values.username.match(/^[a-zA-Z0-9!@#$%^&*()-_+=|\\?<>{}[\]:;'".,~`]+$/)) {
+    errors.username = 'Invalid username';
+  }
+  if (values.username && values.username.length > 60) {
+    errors.username = 'Username must be less than 60 nchar';
+  }
+  if (values.password && !values.password.match(/^(?=.*\d)(?=.*[a-z]*)(?=.*[A-Z]*)(?=.*[!@#$%^&*()-_=+[\]{};:'",.<>?]).{7,12}$/)) {
+    errors.password = 'Invalid password';
+  }
+  if (values.street && !values.street.match(/^[א-ת\s]*$/)) {
+    errors.street = 'Invalid street';
+  }
+  if (values.houseNumber && !values.houseNumber.match(/^\d+$/)) {
+    errors.houseNumber = 'Invalid house number';
+  }
+  if (values.passwordAuthentication && (values.passwordAuthentication != values.password)) {
+    errors.password = 'Password dont match';
+  }
+ 
 
   return errors;
 };
@@ -246,14 +297,13 @@ const validate = (values) => {
               <Grid item xs={12}>
                 <Autocomplete
                   disablePortal
-                  id="city"
-                  
-                  onChange={handleChange}
+                  id="option"
+                  onChange={handleChangeCity}
                   options={city_options || []}
                   getOptionLabel={(option) => option.name} 
                 
                   renderInput={(params) => (
-                    <TextField {...params} label="City" value={userSignUpDetails.city}/>
+                    <TextField {...params} label="City" id="city"/>
                   )}
                 />
                 <p style={{color:"red"}}>{formErrors.city}</p>
@@ -282,12 +332,11 @@ const validate = (values) => {
               </Grid>
               <Grid item xs={12}>
                 <input
-                  accept="image/*"
+                  accept="image/jpeg"
                   id="picture"
                   type="file"
-                  onInput={handleFileInputChange}
+                  onChange={handleImageChange}
                   style={{ display: "none" }}
-                  value={userSignUpDetails.picture}
                 />
                 <label htmlFor="picture">
                   <Button onChange={handleChange} variant="contained" component="span">
