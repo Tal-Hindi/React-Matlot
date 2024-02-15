@@ -51,7 +51,15 @@ const Register = () => {
 
   // Handle form submission
   const onSubmit = (data) => {
-    registerUser(data);
+    if (!userDetails.picture) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "You have to upload picture first!",
+      });
+    } else {
+      registerUser(data);
+    }
   };
 
   // Register user and save data to localStorage
@@ -73,20 +81,20 @@ const Register = () => {
     reset();
 
     // Reset form fields after successful registration
-    setUserDetails({
-      ...userDetails,
-      username: "",
-      password: "",
-      passwordAuthentication: "",
-      picture: "",
-      firstname: "",
-      lastname: "",
-      email: "",
-      birthday: "",
-      city: "",
-      street: "",
-      houseNumber: "",
-    });
+    // setUserDetails({
+    //   ...userDetails,
+    //   username: "",
+    //   password: "",
+    //   passwordAuthentication: "",
+    //   picture: "",
+    //   firstname: "",
+    //   lastname: "",
+    //   email: "",
+    //   birthday: "",
+    //   city: "",
+    //   street: "",
+    //   houseNumber: "",
+    // });
   };
 
   // Handle image upload
@@ -137,10 +145,10 @@ const Register = () => {
                 <TextField
                   required
                   fullWidth
-                  autoComplete="given-name"
                   name="firstname"
                   id="firstname"
-                  label="First Name"
+                  label="First name"
+                  placeholder="First Name"
                   autoFocus
                   {...register("firstname", {
                     required: "First Name is required",
@@ -163,7 +171,7 @@ const Register = () => {
                   id="lastname"
                   label="Last Name"
                   name="lastname"
-                  autoComplete="family-name"
+                  placeholder="Last name"
                   {...register("lastname", {
                     required: "Last Name is required",
                     pattern: {
@@ -185,7 +193,7 @@ const Register = () => {
                   id="email"
                   label="Email Address"
                   name="email"
-                  autoComplete="email"
+                  placeholder="Email"
                   {...register("email", {
                     required: "Email is required",
                     pattern: {
@@ -204,8 +212,9 @@ const Register = () => {
                   required
                   fullWidth
                   id="username"
-                  label="Username"
+                  label="User name"
                   name="username"
+                  placeholder="User name"
                   {...register("username", {
                     required: "Username is required",
                     pattern: {
@@ -232,6 +241,7 @@ const Register = () => {
                   label="Password"
                   type="password"
                   id="password"
+                  placeholder="Password"
                   autoComplete="new-password"
                   {...register("password", {
                     required: "Password is required",
@@ -255,6 +265,7 @@ const Register = () => {
                   id="passwordAuthentication"
                   name="passwordAuthentication"
                   label="Password Authentication"
+                  placeholder="Password Authentication"
                   type="password"
                   {...register("passwordAuthentication", {
                     required: "Password Authentication is required",
@@ -276,6 +287,7 @@ const Register = () => {
                   fullWidth
                   id="birthday"
                   label="Birthday"
+                  placeholder="Birthday"
                   type="date"
                   InputLabelProps={{
                     shrink: true,
@@ -317,6 +329,7 @@ const Register = () => {
                   disablePortal
                   id="city"
                   label="City"
+                  placeholder="city"
                   options={cityOptions || []}
                   getOptionLabel={(option) => option.name}
                   onChange={(event, value) =>
@@ -326,6 +339,7 @@ const Register = () => {
                     <TextField
                       {...params}
                       label="City"
+                      id="options"
                       {...register("city", {
                         required: "City is required",
                         pattern: {
@@ -347,6 +361,7 @@ const Register = () => {
                   id="street"
                   label="Street"
                   name="Street"
+                  placeholder="Street"
                   {...register("street", {
                     required: "Street is required",
                     pattern: {
@@ -367,6 +382,7 @@ const Register = () => {
                   id="houseNumber"
                   label="Number"
                   name="number"
+                  placeholder="Number"
                   {...register("houseNumber", {
                     required: "House Number is required",
                     pattern: {
@@ -386,7 +402,10 @@ const Register = () => {
                   id="picture"
                   type="file"
                   name="picture"
-                  onChange={handleImageChange}
+                  onChange={(e) => {
+                    handleImageChange(e);
+                    register("picture"); // Register the file input
+                  }}
                   style={{ display: "none" }}
                 />
                 <label htmlFor="picture">
