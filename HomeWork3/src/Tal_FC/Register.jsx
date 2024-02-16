@@ -87,11 +87,15 @@ const handleChangeCity = (e) =>{
 
 
 const registerUser = (event) => {
+  event.preventDefault();
 
-  if (Object.keys(validate(userSignUpDetails)).length == 0){
+  const errors = validate(userSignUpDetails);
+    setFormErrors(errors);
+
+   if (Object.keys(errors).length === 0){
 
   
-    event.preventDefault(); // Prevents the default form submission behavior
+     // Prevents the default form submission behavior
 
     // Create a new user object
     const newUser = {
@@ -106,9 +110,7 @@ const registerUser = (event) => {
     const updatedUsers = [...existingUsers, newUser];
 
     // Update localStorage with the updated list of users
-    localStorage.setItem('users', JSON.stringify(updatedUsers));
-
-    setFormErrors(validate(userSignUpDetails)); 
+    localStorage.setItem('users', JSON.stringify(updatedUsers)); 
     
     // Reset the form after successful registration
     setUserSignUpDetails({
@@ -215,8 +217,11 @@ const validate = (values) => {
                   autoFocus
                   onChange={handleChange}
                   value={userSignUpDetails.firstname}
+                  error={Boolean(formErrors.firstname)}
+                  helperText={formErrors.firstname}
+                  
                 />
-                <p style={{color:"red"}}>{formErrors.firstname}</p>
+                
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -227,8 +232,9 @@ const validate = (values) => {
                   autoComplete="family-name"
                   onChange={handleChange}
                   value={userSignUpDetails.lastname}
+                  error={Boolean(formErrors.lastname)}
+                  helperText={formErrors.lastname}
                 />
-                <p style={{color:"red"}}>{formErrors.lastname}</p>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -239,8 +245,9 @@ const validate = (values) => {
                   autoComplete="email"
                   onChange={handleChange}
                   value={userSignUpDetails.email}
+                  error={Boolean(formErrors.email)}
+                  helperText={formErrors.email}
                 />
-                <p style={{color:"red"}}>{formErrors.email}</p>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -250,8 +257,9 @@ const validate = (values) => {
                   label="Username"
                   onChange={handleChange}
                   value={userSignUpDetails.username}
+                  error={Boolean(formErrors.username)}
+                  helperText={formErrors.username}
                 />
-                <p style={{color:"red"}}>{formErrors.username}</p>
               </Grid>
               
               <Grid item xs={12}>
@@ -264,8 +272,9 @@ const validate = (values) => {
                   autoComplete="new-password"
                   onChange={handleChange}
                   value={userSignUpDetails.password}
+                  error={Boolean(formErrors.password)}
+                  helperText={formErrors.password}
                 />
-                <p style={{color:"red"}}>{formErrors.password}</p>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -276,8 +285,9 @@ const validate = (values) => {
                   type="password"
                   onChange={handleChange}
                   value={userSignUpDetails.passwordAuthentication}
+                  error={Boolean(formErrors.passwordAuthentication)}
+                  helperText={formErrors.passwordAuthentication}
                 />
-                <p style={{color:"red"}}>{formErrors.passwordAuthentication}</p>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -291,8 +301,9 @@ const validate = (values) => {
                   }}
                   onChange={handleChange}
                   value={userSignUpDetails.birthday}
+                  error={Boolean(formErrors.birthday)}
+                  helperText={formErrors.birthday}
                 />
-                <p style={{color:"red"}}>{formErrors.birthday}</p>
               </Grid>
               <Grid item xs={12}>
                 <Autocomplete
@@ -303,10 +314,15 @@ const validate = (values) => {
                   getOptionLabel={(option) => option.name} 
                 
                   renderInput={(params) => (
-                    <TextField {...params} label="City" id="city"/>
+                    <TextField 
+                    {...params} 
+                    label="City" 
+                    id="city"
+                    error={Boolean(formErrors.city)}
+                    helperText={formErrors.city}
+                    />
                   )}
                 />
-                <p style={{color:"red"}}>{formErrors.city}</p>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -316,8 +332,9 @@ const validate = (values) => {
                   label="Street"
                   onChange={handleChange}
                   value={userSignUpDetails.street}
+                  error={Boolean(formErrors.street)}
+                  helperText={formErrors.street}
                 />
-                <p style={{color:"red"}}>{formErrors.street}</p>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -327,8 +344,9 @@ const validate = (values) => {
                   label="number"
                   onChange={handleChange}
                   value={userSignUpDetails.houseNumber}
+                  error={Boolean(formErrors.houseNumber)}
+                  helperText={formErrors.houseNumber}
                 />
-                <p style={{color:"red"}}>{formErrors.houseNumber}</p>
               </Grid>
               <Grid item xs={12}>
                 <input
