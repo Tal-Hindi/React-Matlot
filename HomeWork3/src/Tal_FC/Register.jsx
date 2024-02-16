@@ -12,7 +12,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import * as data from "../israel_cities_names_and__geometric_data.json";
 import React, { useState } from 'react'
 import { loadUsers } from "./UserLocalStorage";
-
+import Swal from 'sweetalert2'
 
 const city_options = data.default; // Access the default export from the imported module
 
@@ -111,6 +111,12 @@ const registerUser = (event) => {
 
     // Update localStorage with the updated list of users
     localStorage.setItem('users', JSON.stringify(updatedUsers)); 
+
+    Swal.fire({
+      title: `Hey ${userSignUpDetails.firstname}`,
+      text: "signed up successfully",
+      icon: "success"
+    });
     
     // Reset the form after successful registration
     setUserSignUpDetails({
