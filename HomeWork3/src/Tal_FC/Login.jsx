@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from 'react'
 import { loadUsers } from "./UserLocalStorage";
+import Swal from 'sweetalert2'
 import {loadRegisteredUsers} from "./UserSessionStorage"
 
 const defaultTheme = createTheme();
@@ -22,6 +23,7 @@ export default function Login() {
   })
 
   const [userIdCounter, setUserIdCounter] = useState(1);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const generateUniqueId = () => { //increase id counter every time a new user is created
     const newId = userIdCounter;
@@ -55,18 +57,24 @@ const loginUser = (username, password) =>{
 
 //if found ..
  if(foundUser){
-
+  setIsLoggedIn(true);
   //create new registered user and save all his data 
   const newregisteredUser = {
     id:generateUniqueId(),
     ...foundUser
   }
-
   const updatedUsers = [...registersUsers, newregisteredUser];
- 
-
   // Update session storage with the updated list of users
   sessionStorage.setItem('registerdUsers', JSON.stringify(updatedUsers));
+ }
+ else {
+
+  Swal.fire({
+    icon: "error",
+    title: "Oops...",
+    text: "Invalid username or password",
+  });
+
  }
 
 }
