@@ -9,15 +9,25 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from 'react'
+import { loadUsers } from "./UserLocalStorage";
+import {loadRegisteredUsers} from "./UserSessionStorage"
 
 const defaultTheme = createTheme();
 
 export default function Login() {
 
   const [userLoginDetails, setUserLoginDetails] = useState({
-    username: "",
-    password: ""
+    usernamelogin: "",
+    passwordlogin: ""
   })
+
+  const [userIdCounter, setUserIdCounter] = useState(1);
+
+  const generateUniqueId = () => { //increase id counter every time a new user is created
+    const newId = userIdCounter;
+    setUserIdCounter(prevCounter => prevCounter + 1);
+    return newId;
+}
 
   function handleChange(event) {
 
@@ -32,20 +42,46 @@ export default function Login() {
 
 }
 
- //loginUser - פונקציה המקבלת שם משתמש וסיסמה ובודקת אם קיים משתמש שפרטיו זהים - במידה וכן יש לשמור את כל פרטי המשתמש בסשן סטורג
+const loginUser = (username, password) =>{
+
+  //all the users from loacl stoarge
+ const users = loadUsers()
+
+  // check if this user is exists in the users array
+ const foundUser = users.find(user => user.username === username && user.password === password);
+
+  //all the registers Users from session storage 
+ const registersUsers = loadRegisteredUsers()
+
+//if found ..
+ if(foundUser){
+
+  //create new registered user
+  const newregisteredUser = {
+    id:generateUniqueId(),
+    ...userLoginDetails
+  }
+
+  const updatedUsers = [...registersUsers, newregisteredUser];
+ 
+
+  // Update session storage with the updated list of users
+  sessionStorage.setItem('registerdUsers', JSON.stringify(updatedUsers));
+ }
+
+}
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    console.log({
-      username: data.get("username"),
-      password: data.get("password"),
-    });
+    
+    loginUser(data.get("usernamelogin"),data.get("passwordlogin"))
 
+    //clearing the form fields
     setUserLoginDetails({
-      username:"",
-      password:""
+      usernamelogin: "",
+      passwordlogin: ""
   })
   };
 
@@ -77,24 +113,24 @@ export default function Login() {
               margin="normal"
               required
               fullWidth
-              id="username"
+              id="usernamelogin"
+              name="usernamelogin"
               label="User name"
-              name="username"
               onChange={handleChange}
               autoComplete="username"
-              value={userLoginDetails.username}
+              value={userLoginDetails.usernamelogin}
             />
             <TextField
               margin="normal"
               required
               fullWidth
-              name="password"
               label="Password"
               type="password"
-              id="password"
+              id="passwordlogin"
+              name="passwordlogin"
               autoComplete="current-password"
               onChange={handleChange}
-              value={userLoginDetails.password}
+              value={userLoginDetails.passwordlogin}
             />
             <Button
               type="submit"
