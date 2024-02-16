@@ -56,10 +56,10 @@ const loginUser = (username, password) =>{
 //if found ..
  if(foundUser){
 
-  //create new registered user
+  //create new registered user and save all his data 
   const newregisteredUser = {
     id:generateUniqueId(),
-    ...userLoginDetails
+    ...foundUser
   }
 
   const updatedUsers = [...registersUsers, newregisteredUser];
@@ -75,7 +75,7 @@ const loginUser = (username, password) =>{
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    
+
     loginUser(data.get("usernamelogin"),data.get("passwordlogin"))
 
     //clearing the form fields
