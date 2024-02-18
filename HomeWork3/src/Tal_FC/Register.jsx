@@ -181,10 +181,34 @@ const validate = (values) => {
   if (values.passwordAuthentication && (values.passwordAuthentication != values.password)) {
     errors.password = 'Password dont match';
   }
+  if(values.birthday && validateDate(values.birthday) == "flase"){
+   errors.birthday = "Age must be between 18 and 120";
+  }
  
 
   return errors;
 };
+
+const validateDate = (value) => {
+  const [year, month, day] = value.split("-").map(Number);
+  const selectedDate = new Date(year, month - 1, day);
+  const currentDate = new Date();
+  let age =
+    currentDate.getFullYear() - selectedDate.getFullYear();
+  const monthDiff =
+    currentDate.getMonth() - selectedDate.getMonth();
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 &&
+      currentDate.getDate() < selectedDate.getDate())
+  ) {
+    age--;
+  }
+  return (
+    (age >= 18 && age <= 120) || "flase"
+  );
+}
+
 
 
   return (
