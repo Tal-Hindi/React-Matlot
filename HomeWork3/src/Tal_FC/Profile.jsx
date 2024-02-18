@@ -18,7 +18,7 @@ const Profile = ({ user, onLogout, onEditDetails }) => {
 
   return (
     <div>
-      {user ? (
+     {user ? (
         <div>
           <Typography variant="h5">Profile Details</Typography>
           <Typography>

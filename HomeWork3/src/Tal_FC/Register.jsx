@@ -86,16 +86,16 @@ const handleChangeCity = (e) =>{
 }
 
 
-const registerUser = (event) => {
+const registerUser = (event) => { 
+  
+  // Prevents the default form submission behavior
   event.preventDefault();
 
   const errors = validate(userSignUpDetails);
     setFormErrors(errors);
 
+    // if there is no errors submit the form
    if (Object.keys(errors).length === 0){
-
-  
-     // Prevents the default form submission behavior
 
     // Create a new user object
     const newUser = {
@@ -104,7 +104,7 @@ const registerUser = (event) => {
     };
 
     // Get existing users from localStorage
-     const existingUsers = loadUsers();
+    const existingUsers = loadUsers();
 
     // Add the new user to the list
     const updatedUsers = [...existingUsers, newUser];
