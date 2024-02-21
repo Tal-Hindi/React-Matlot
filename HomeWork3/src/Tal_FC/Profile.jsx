@@ -1,51 +1,60 @@
-import React from 'react';
+
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { loadRegisteredUsers } from './UserSessionStorage';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import { Box } from '@mui/material';
+import { useState } from 'react'
+import EditUser from './EditDetails';
 
-const Profile = ({ user, onLogout, onEditDetails }) => {
-  const registeredUsers = loadRegisteredUsers();
+const Profile = ({ foundUser, logoutUser, onEdit }) => {
+
+  // Continue with the rest of the component
+  const imagePath = foundUser.picture;
 
   const handleLogout = () => {
-    // Logic to handle user logout
-    onLogout();
+    // Call the logoutUser function to log out the user
+    logoutUser(foundUser.email);
   };
 
-  const handleEditDetails = () => {
-    // Logic to handle edit details
-    onEditDetails();
-  };
+  const handleEdit = () => {
+    onEdit();
+  }
 
   return (
-    <div>
-     {user ? (
-        <div>
-          <Typography variant="h5">Profile Details</Typography>
-          <Typography>
-            <strong>Username:</strong> {user.username}
+    <Box>
+      <Card sx={{ maxWidth: 345 }}>
+        <CardMedia
+          sx={{ height: 140 }}
+          image={imagePath}
+          title="user photo"
+        />
+        <CardContent variant="body2" color="text.secondary">
+          <Typography variant="body2" color="text.secondary">
+            Name: {foundUser.firstname} {foundUser.lastname}
+            <br />
+            Adress: {foundUser.city} , {foundUser.street} {foundUser.housenumber}
+            <br />
+            Email: {foundUser.email}
+            <br />
+            Birthday: {foundUser.birthday}
+            <br />
+            Username: {foundUser.username}
           </Typography>
-          <Typography>
-            <strong>Email:</strong> {user.email}
-          </Typography>
-          {/* Add other user details as needed */}
-          <Button variant="contained" onClick={handleLogout}>
+        </CardContent>
+        <CardActions>
+          <Button size="small" onClick={handleLogout}>
             Logout
           </Button>
-          <Button variant="outlined" onClick={handleEditDetails}>
-            Edit Details
-          </Button>
-          <Typography>
-            <a href="your_favorite_game_link" target="_blank" rel="noopener noreferrer">
-              Favorite Online Game
-            </a>
-          </Typography>
-        </div>
-      ) : (
-        <Typography>You must connect to the system.</Typography>
-      )}
-    </div>
+          <Button size="small" onClick={handleEdit}>Edit</Button>
+        </CardActions>
+      </Card>
+    </Box>
+
   );
 };
 
 export default Profile;
-

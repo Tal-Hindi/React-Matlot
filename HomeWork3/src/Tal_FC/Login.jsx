@@ -9,29 +9,21 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from 'react'
-import { loadUsers } from "./UserLocalStorage";
 import Swal from 'sweetalert2'
 import { loadRegisteredUsers } from "./UserSessionStorage"
+import Profile from "./Profile";
 
 const defaultTheme = createTheme();
 
-export default function Login() {
+const Login = ({ appUsers, onLogin }) => {
 
   const [userLoginDetails, setUserLoginDetails] = useState({
     usernamelogin: "",
     passwordlogin: ""
   })
 
-  const [userIdCounter, setUserIdCounter] = useState(1);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [foundUser, setFoundUser] = useState(null);
   const [formErrors, setFormErrors] = useState({})
 
-  const generateUniqueId = () => { //increase id counter every time a new user is created
-    const newId = userIdCounter;
-    setUserIdCounter(prevCounter => prevCounter + 1);
-    return newId;
-  }
 
   function handleChange(event) {
 
@@ -46,29 +38,9 @@ export default function Login() {
 
   }
 
-  const loginUser = (username, password) => {
 
-    //all the users from loacl stoarge
-    const users = loadUsers()
 
-    // check if this user is exists in the users array
-    const foundUser = users.find(user => user.username === username && user.password === password);
-    
-    //if found ..
-    if (foundUser) {
-      setIsLoggedIn(true);
-      setFoundUser(foundUser) // Set the found user details in the state
-      //create new registered user and save all his data 
-      const newregisteredUser = {
-        id: generateUniqueId(),
-        ...foundUser
-      }
-      const updatedUsers = [...loadRegisteredUsers(), newregisteredUser];
-      // Update session storage with the updated list of users
-      sessionStorage.setItem('registerdUsers', JSON.stringify(updatedUsers));
-    }
 
-  }
 
   const handleSubmit = (event) => {
 
@@ -81,21 +53,13 @@ export default function Login() {
 
       const data = new FormData(event.currentTarget);
 
-      loginUser(data.get("usernamelogin"), data.get("passwordlogin"))
-
-      if(foundUser){
-      Swal.fire({
-        title: `Welcome Back ${foundUser.firstname}`,
-        text: "You are logged in!",
-        icon: "success"
-      });}
-
-      //clearing the form fields
+      onLogin(data.get("usernamelogin"), data.get("passwordlogin"))
+      
       setUserLoginDetails({
         usernamelogin: "",
         passwordlogin: ""
       })
-    }
+      }
   };
 
   const validate = (values) => {
@@ -184,5 +148,8 @@ export default function Login() {
         </Box>
       </Container>
     </ThemeProvider>
-  );
+
+  )
 }
+
+export default Login;

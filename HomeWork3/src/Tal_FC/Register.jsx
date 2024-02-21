@@ -18,7 +18,7 @@ const city_options = data.default; // Access the default export from the importe
 
 const defaultTheme = createTheme();
 
-export default function Register() {
+export default function Register(props) {
 
 //creating full details state
   const [userSignUpDetails, setUserSignUpDetails] = useState({
@@ -35,34 +35,24 @@ export default function Register() {
     houseNumber: ""
 })
 
-const [userIdCounter, setUserIdCounter] = useState(1); // id for each user
+
 
 const [formErrors, setFormErrors] = useState({})
 
 
 
-const generateUniqueId = () => { //increase id counter every time a new user is created
-    const newId = userIdCounter;
-    setUserIdCounter(prevCounter => prevCounter + 1);
-    return newId;
-}
-
 const handleImageChange = (event) => {
   const file = event.target.files[0];
-  const reader = new FileReader();
-
-  reader.onloadend = () => {
-    const imageDataUrl = reader.result;
+  const reader = new FileReader();//read and save as base 64
+  reader.readAsDataURL(file);
+  reader.onload = () => {
     setUserSignUpDetails((prevUserDetails) => ({
       ...prevUserDetails,
-      picture: imageDataUrl,
+      picture: reader.result // or imageDataUrl if you prefer URL
     }));
   };
-
-  if (file) {
-    reader.readAsDataURL(file);
-  }
 };
+
 
 
 const handleChange = (event) => {
@@ -99,18 +89,19 @@ const registerUser = (event) => {
 
     // Create a new user object
     const newUser = {
-        id: generateUniqueId(),
         ...userSignUpDetails
     };
 
+    props.addUser(newUser);
+
     // Get existing users from localStorage
-    const existingUsers = loadUsers();
+    //const existingUsers = loadUsers();
 
     // Add the new user to the list
-    const updatedUsers = [...existingUsers, newUser];
+    //const updatedUsers = [...existingUsers, newUser];
 
     // Update localStorage with the updated list of users
-    localStorage.setItem('users', JSON.stringify(updatedUsers)); 
+    //localStorage.setItem('users', JSON.stringify(updatedUsers)); 
 
     Swal.fire({
       title: `Hey ${userSignUpDetails.firstname}`,
@@ -137,7 +128,6 @@ const registerUser = (event) => {
 
   }
 
-   
     
 }
 
@@ -383,7 +373,7 @@ const validateDate = (value) => {
                   accept="image/jpeg"
                   id="picture"
                   type="file"
-                  onChange={handleImageChange}
+                  onInput={handleImageChange}
                   style={{ display: "none" }}
                 />
                 <label htmlFor="picture">
