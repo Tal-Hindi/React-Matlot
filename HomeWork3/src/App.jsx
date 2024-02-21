@@ -94,11 +94,6 @@ const App = () => {
       return updated;
     });
 
-
-    // Update user details in local storage or wherever they are stored
-    // ...
-
-    // Optionally, show a success message
     Swal.fire({
       title: `Hey ${editedUser.username}`,
       text: 'Profile updated successfully',

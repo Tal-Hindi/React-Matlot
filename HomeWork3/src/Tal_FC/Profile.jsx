@@ -44,10 +44,11 @@ const Profile = ({ foundUser, logoutUser, onEdit }) => {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" onClick={handleLogout}>
-            Logout
-          </Button>
-          <Button size="small" onClick={handleEdit}>Edit</Button>
+        
+          <Button size="small" onClick={handleEdit}>Edit</Button> 
+           <Button size="small" onClick={handleLogout}> Logout</Button>
+           
+          
         </CardActions>
       </Card>
     </Box>
