@@ -7,12 +7,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { Avatar } from '@mui/material';
 
 
 export default function SystemAdmin({appUsers}) {
 
-    const createData = (username, fullname, birthday, address, email) => {
-        return { username, fullname, birthday, address, email };
+    const createData = (username, fullname, birthday, address, email, picture) => {
+        return { username, fullname, birthday, address, email , picture};
     }
 
     
@@ -20,7 +21,7 @@ export default function SystemAdmin({appUsers}) {
         const rows = [];
         appUsers.forEach(element => {
             rows.push(
-                createData(element.username, `${element.firstname +" "+ element.lastname}`, element.birthday, `${element.city +", " + element.street +", " + element.houseNumber}`, element.email)
+                createData(element.username, `${element.firstname +" "+ element.lastname}`, element.birthday, `${element.city +", " + element.street +", " + element.houseNumber}`, element.email, element.picture)
             )
             
         })
@@ -34,6 +35,7 @@ export default function SystemAdmin({appUsers}) {
             <Table sx={{ minWidth: 1000}} aria-label="simple table" >
                 <TableHead> 
                     <TableRow >
+                        <TableCell align="right" style={{backgroundColor:"black", color:"white", fontWeight:"bold"}}>User</TableCell>
                         <TableCell align="right" style={{backgroundColor:"black", color:"white", fontWeight:"bold"}}>username</TableCell>
                         <TableCell align="right" style={{backgroundColor:"black", color:"white", fontWeight:"bold"}}>full name</TableCell>
                         <TableCell align="right" style={{backgroundColor:"black", color:"white", fontWeight:"bold"}}>birthday</TableCell>
@@ -46,7 +48,8 @@ export default function SystemAdmin({appUsers}) {
                         <TableRow
                             key={row.email}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
+                        > 
+                            <TableCell align="right"><Avatar src={row.picture}/></TableCell>
                             <TableCell align="right">{row.username}</TableCell>
                             <TableCell align="right">{row.fullname}</TableCell>
                             <TableCell align="right">{row.birthday}</TableCell>

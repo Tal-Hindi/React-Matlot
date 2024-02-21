@@ -31,7 +31,7 @@ const App = () => {
     setAppUsers(loadedUsers);
   }, []);
 
-  const addUser = (newUser) => {
+  const registerUser = (newUser) => {
     const updatedUsers = [...appUsers, newUser];
     localStorage.setItem('users', JSON.stringify(updatedUsers));
     setAppUsers(updatedUsers);
@@ -82,19 +82,8 @@ const App = () => {
     setIsEdit(false);
   }
 
-  const handleEditSave = (editedUser) => {
+  const editUser = (editedUser) => {
     setIsEdit(false);
-
-    //const indexToChange = appUsers.findIndex(obj => obj.email === editedUser.email);
-    //appUsers[indexToChange] = editedUser;
-
-
-
-    //  setAppUsers(updated);
-
-    // localStorage.setItem('users', JSON.stringify(updated));
-
-
 
     setAppUsers((prev) => {
       let updated = prev.map((u) => {
@@ -126,7 +115,7 @@ const App = () => {
       <Container component="main" maxWidth="xl">
         <CssBaseline />
         <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <Register addUser={addUser} />
+          <Register registerUser={registerUser} />
           {isLoggedIn ? (
             <>
               {isAdmin ? (<SystemAdmin appUsers={appUsers}/>) :
@@ -135,7 +124,7 @@ const App = () => {
 
               }
               {isEdit ? (
-                <EditUser userDetails={foundUser} onCancel={handleEditCancel} onSave={handleEditSave} />
+                <EditUser userDetails={foundUser} onCancel={handleEditCancel} onSave={editUser} />
               ) : null}
             </>
           ) : (

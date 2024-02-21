@@ -9,9 +9,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from 'react'
-import Swal from 'sweetalert2'
-import { loadRegisteredUsers } from "./UserSessionStorage"
-import Profile from "./Profile";
+
 
 const defaultTheme = createTheme();
 

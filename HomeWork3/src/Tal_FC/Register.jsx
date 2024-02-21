@@ -11,7 +11,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Autocomplete from "@mui/material/Autocomplete";
 import * as data from "../israel_cities_names_and__geometric_data.json";
 import React, { useState } from 'react'
-import { loadUsers } from "./UserLocalStorage";
 import Swal from 'sweetalert2'
 
 const city_options = data.default; // Access the default export from the imported module
@@ -76,7 +75,7 @@ const handleChangeCity = (e) =>{
 }
 
 
-const registerUser = (event) => { 
+const createNewUser = (event) => { 
   
   // Prevents the default form submission behavior
   event.preventDefault();
@@ -92,7 +91,7 @@ const registerUser = (event) => {
         ...userSignUpDetails
     };
 
-    props.addUser(newUser);
+    props.registerUser(newUser);
 
     // Get existing users from localStorage
     //const existingUsers = loadUsers();
@@ -222,7 +221,7 @@ const validateDate = (value) => {
           <Box
             component="form"
             noValidate
-            onSubmit={registerUser}
+            onSubmit={createNewUser}
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
@@ -385,7 +384,7 @@ const validateDate = (value) => {
               </Grid>
             </Grid>
             <Button
-            onClick={registerUser}
+            onClick={createNewUser}
               type="submit"
               fullWidth
               variant="contained"
