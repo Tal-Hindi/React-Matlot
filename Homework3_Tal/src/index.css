@@ -223,3 +223,51 @@ fieldset {
 .link-favorite-game:hover {
   color: #9cbaba;
 }
+
+/* SystemAdmin.css */
+
+.admin-panel {
+  width: 90%;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: linear-gradient(180deg, #253c3c, #1d4949);
+  border-radius: 8px;
+  box-shadow: 0 0 16px 1px rgba(0, 0, 0, 0.5);
+  color: #d9e2f1; /* Set text color to white */
+}
+
+.admin-table {
+  width: auto; /* Set width to auto for dynamic sizing */
+  border-collapse: collapse;
+  margin-top: 1rem;
+  table-layout: auto; /* Allow table to adjust its layout */
+}
+
+.admin-table th,
+.admin-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  color: #d9e2f1; /* Set text color to white */
+}
+
+.admin-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  color: #253c3c; /* Set title text color */
+}
+
+.admin-btn {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: none;
+  background-color: #147b73;
+  color: #d9e2f1;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+.admin-btn:hover,
+.admin-btn:focus {
+  background-color: #319890;
+}

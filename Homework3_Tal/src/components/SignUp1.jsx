@@ -1,24 +1,9 @@
-import UserForm from "./UseForm";
-import Swal from "sweetalert2";
+import UserForm from "./UserForm";
 
-const Signup1 = () => {
-  const handleSubmit = (formData) => {
-    // Update local storage with the new user
-    const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
-    const updatedUsers = [...existingUsers, formData];
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
-
-    // Show success message
-    Swal.fire({
-      icon: "success",
-      title: "Registration Successful!",
-      text: "You have successfully registered.",
-    });
-  };
-
+const Signup1 = (props) => {
   return (
     <div>
-      <UserForm onSubmit={handleSubmit} includeEmailField={true} />
+      <UserForm onSubmit={props.handleSubmit} source="signup" />
     </div>
   );
 };

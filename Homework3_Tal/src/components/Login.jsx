@@ -1,64 +1,19 @@
-import { useState } from "react";
-import { userNameValidation, passwordValidation } from "../util/validation.js";
-import Swal from "sweetalert2";
+// import { useState } from "react";
+// import { userNameValidation, passwordValidation } from "../util/validation.js";
+// import Swal from "sweetalert2";
 
-export default function Login({ onLogin }) {
-  const [enteredUserName, setUserName] = useState("");
-  const [enteredPassword, setEnteredPassword] = useState("");
-
-  const [userNameError, setuserNameError] = useState(false);
-  const [passwordError, setpasswordError] = useState(false);
-
-  function handleSubmit(event) {
-    event.preventDefault();
-
-    setuserNameError(!userNameValidation(enteredUserName));
-    setpasswordError(!passwordValidation(enteredPassword));
-
-    const users = JSON.parse(localStorage.getItem("users") || []);
-
-    const foundUser = users.find(
-      (user) =>
-        user.username === enteredUserName && user.password === enteredPassword
-    );
-    if (foundUser) {
-      onLogin(foundUser);
-      sessionStorage.setItem("loggedInUser", JSON.stringify(foundUser));
-
-      setEnteredPassword("");
-      setUserName("");
-
-      Swal.fire({
-        icon: "success",
-        title: "You Logged IN ",
-        text: "You have successfully loggin.",
-      });
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "You must sign up first",
-      });
-    }
-  }
-
-  function handleUserNameChange(event) {
-    setUserName(event.target.value);
-  }
-
-  function handlePasswordChange(event) {
-    setEnteredPassword(event.target.value);
-  }
-  function handleReset(event) {
-    event.preventDefault();
-    setEnteredPassword("");
-    setUserName("");
-    setuserNameError(false);
-    setpasswordError(false);
-  }
-
+export default function Login({
+  onLogin,
+  handleReset,
+  handleUserNameChange,
+  handlePasswordChange,
+  enteredUserName,
+  enteredPassword,
+  userNameError,
+  passwordError,
+}) {
   return (
-    <form onSubmit={handleSubmit} onReset={handleReset}>
+    <form onSubmit={onLogin} onReset={handleReset}>
       <h2>Login</h2>
       <div className="control-row">
         <div className="control no-margin">

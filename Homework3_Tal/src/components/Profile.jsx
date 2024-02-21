@@ -1,46 +1,9 @@
-import React, { useState, useEffect } from "react";
-import EditDetails from "./EditDetails";
+// import { useState } from "react";
 
-const Profile = ({ user, onLogout }) => {
-  const [showEditDetails, setShowEditDetails] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
-
-  useEffect(() => {
-    if (user) {
-      setCurrentUser(user);
-    }
-  }, [user]);
-
-  const logoutUser = (email) => {
-    const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
-    if (loggedInUser && loggedInUser.email === email) {
-      sessionStorage.removeItem("loggedInUser");
-      onLogout();
-      console.log("User logged out successfully.");
-      return true;
-    } else {
-      console.log(
-        "Failed to logout. User not logged in or email does not match."
-      );
-      return false;
-    }
-  };
-
+const Profile = ({ foundUser, logoutUser, onEdit }) => {
   const handleLogout = () => {
-    const email = currentUser?.email;
-    const logoutSuccess = logoutUser(email);
-    if (logoutSuccess) {
-      setCurrentUser(null);
-    }
-  };
-
-  const handleEditDetailsClick = () => {
-    setShowEditDetails((prevState) => !prevState);
-  };
-
-  const onUpdateSuccess = (updatedUser) => {
-    setCurrentUser(updatedUser);
-    setShowEditDetails(false);
+    const email = foundUser?.email;
+    logoutUser(email);
   };
 
   return (
@@ -49,31 +12,28 @@ const Profile = ({ user, onLogout }) => {
         <h2>User Profile</h2>
       </div>
       <div>
-        {currentUser && (
+        {foundUser && (
           <div className="profile-details">
-            <p>Username: {currentUser.username}</p>
-            <p>Email: {currentUser.email}</p>
-            <p>Birthdate: {currentUser.birthdate}</p>
-            <p>First Name: {currentUser.firstname}</p>
-            <p>Last Name: {currentUser.lastname}</p>
-            <p>City: {currentUser.city}</p>
-            <p>Street: {currentUser.street}</p>
-            <p>House Number: {currentUser.housenumber}</p>
-            <img src={currentUser.picture} alt="User" />
+            <p>Username: {foundUser.username}</p>
+            <p>Email: {foundUser.email}</p>
+            <p>Birthdate: {foundUser.birthdate}</p>
+            <p>First Name: {foundUser.firstname}</p>
+            <p>Last Name: {foundUser.lastname}</p>
+            <p>City: {foundUser.city}</p>
+            <p>Street: {foundUser.street}</p>
+            <p>House Number: {foundUser.housenumber}</p>
+            <img src={foundUser.picture} alt="User" />
           </div>
         )}
         <div className="profile-actions">
           <button className="button-profile" onClick={handleLogout}>
             Logout
           </button>
-          <button className="button-profile" onClick={handleEditDetailsClick}>
-            {showEditDetails ? "Hide Details" : "Edit Details"}
+          <button className="button-profile" onClick={onEdit}>
+            Edit
           </button>
         </div>
       </div>
-      {showEditDetails && (
-        <EditDetails user={currentUser} onUpdateSuccess={onUpdateSuccess} />
-      )}
     </div>
   );
 };
