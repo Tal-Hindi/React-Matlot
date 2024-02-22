@@ -1,4 +1,6 @@
 // import { useState } from "react";
+import EmailIcon from "@mui/icons-material/Email";
+import PersonIcon from "@mui/icons-material/Person";
 
 const Profile = ({ foundUser, logoutUser, onEdit }) => {
   const handleLogout = () => {
@@ -15,7 +17,9 @@ const Profile = ({ foundUser, logoutUser, onEdit }) => {
         {foundUser && (
           <div className="profile-details-grid">
             <div className="profile-item">
-              <span className="profile-label">Username: </span>
+              <span className="profile-label">
+                <PersonIcon /> Username:{" "}
+              </span>
               <span className="profile-value">{foundUser.username}</span>
             </div>
             <div className="profile-item">
@@ -23,7 +27,10 @@ const Profile = ({ foundUser, logoutUser, onEdit }) => {
               <span className="profile-value">{foundUser.password}</span>
             </div>
             <div className="profile-item">
-              <span className="profile-label">Email:</span>
+              <span className="profile-label">
+                {" "}
+                <EmailIcon /> Email:
+              </span>
               <span className="profile-value">{foundUser.email}</span>
             </div>
             <div className="profile-item">
