@@ -16,7 +16,7 @@ function App() {
   const [enteredPassword, setEnteredPassword] = useState("");
   const [userNameError, setuserNameError] = useState(false);
   const [passwordError, setpasswordError] = useState(false);
-  const [appUser, setAppUsers] = useState([]);
+  const [appUsers, setAppUsers] = useState([]);
   const [foundUser, setFoundUser] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [isAdmin, setisAdmin] = useState(false);
@@ -67,7 +67,7 @@ function App() {
       setUserName("");
     } else {
       setisAdmin(false);
-      const foundUser = appUser.find(
+      const foundUser = appUsers.find(
         (user) =>
           user.username === enteredUserName && user.password === enteredPassword
       );
@@ -114,7 +114,7 @@ function App() {
   }
   // Handle registration form submission
   const handleSubmitRegister = (formData) => {
-    const existingUsers = appUser;
+    const existingUsers = appUsers;
     const updatedUsers = [...existingUsers, formData];
     localStorage.setItem("users", JSON.stringify(updatedUsers));
     setAppUsers(updatedUsers);
@@ -132,6 +132,7 @@ function App() {
     setFoundUser(null);
     sethideLoginComp(true);
     sethideRegisterComp(true);
+    console.log(email);
 
     const tempUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
     if (tempUser && tempUser.email == email) {
@@ -140,17 +141,19 @@ function App() {
   };
 
   // Edit user details
-  const editUser = (prev) => {
-    let updated = prev.map((u) => {
+  const editUser = (editedUser) => {
+    const updatedUsers = appUsers.map((u) => {
       if (u.email == editedUser.email) return editedUser;
-      return u;
+      else return u;
     });
-    localStorage.setItem("users", JSON.stringify(updated));
-    return updated;
+    setAppUsers(updatedUsers);
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+    return updatedUsers;
   };
+
   // Handle changes in user details
   const handleEditChange = (formData) => {
-    const existingUsers = appUser;
+    const existingUsers = appUsers;
     const userIndex = existingUsers.findIndex(
       (u) => u.email === loggedInUser.email
     );
@@ -189,16 +192,17 @@ function App() {
     // Update the selected picture state
     setSelectedPicture(picture);
   };
+
   // Delete user
   const deleteUser = (email) => {
     // Find the index of the user to be deleted
-    const userIndex = appUser.findIndex((user) => user.email === email);
+    const userIndex = appUsers.findIndex((user) => user.email === email);
 
     if (userIndex !== -1) {
       // If user exists, remove it from the array
       const updatedUsers = [
-        ...appUser.slice(0, userIndex),
-        ...appUser.slice(userIndex + 1),
+        ...appUsers.slice(0, userIndex),
+        ...appUsers.slice(userIndex + 1),
       ];
       setAppUsers(updatedUsers);
 
@@ -232,7 +236,12 @@ function App() {
             logoutUser={logoutUser}
             onEdit={toggleEdit}
           />
-          <SystemAdmin users={appUser} deleteUser={deleteUser} />{" "}
+          <SystemAdmin
+            users={appUsers}
+            deleteUser={deleteUser}
+            onPictureSelect={handlePictureSelect}
+            updateUser={editUser}
+          />
         </>
       ); // or whatever you want to render for the admin
     } else if (foundUser) {
@@ -260,6 +269,7 @@ function App() {
               <Register
                 handleSubmit={handleSubmitRegister}
                 onPictureSelect={handlePictureSelect}
+                users={appUsers}
               />
             )}
             {hideLoginComp && (
@@ -277,7 +287,7 @@ function App() {
           </>
         )}
 
-        {isEdit ? (
+        {!isAdmin && isEdit && foundUser != null ? (
           <EditDetails
             handleEditChange={handleEditChange}
             editUser={editUser}

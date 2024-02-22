@@ -2,7 +2,7 @@
 
 const Profile = ({ foundUser, logoutUser, onEdit }) => {
   const handleLogout = () => {
-    const email = foundUser?.email;
+    const email = foundUser.email;
     logoutUser(email);
   };
 

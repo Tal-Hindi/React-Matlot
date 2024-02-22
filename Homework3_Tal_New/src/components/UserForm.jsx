@@ -11,7 +11,7 @@ import {
   dateValidation,
 } from "../util/validation.js";
 
-const UserForm = ({ onSubmit, user, source, onPictureSelect }) => {
+const UserForm = ({ onSubmit, user, source, onPictureSelect, users }) => {
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({});
   const [imagePath, setImagePath] = useState(null);
@@ -39,6 +39,11 @@ const UserForm = ({ onSubmit, user, source, onPictureSelect }) => {
     newErrors.birthdate = !dateValidation(data.birthdate);
     const cities = ["תל אביב", "חדרה", "נתניה", "חיפה", "חולון"];
     newErrors.city = !cities.includes(data.city);
+    if (source == "signup") {
+      newErrors.existemail = users.find((user) => user.email == data.email)
+        ? true
+        : false;
+    }
 
     setErrors(newErrors);
 
@@ -165,6 +170,9 @@ const UserForm = ({ onSubmit, user, source, onPictureSelect }) => {
             />
             {errors.email && (
               <p className="control-error">Invalid email address format</p>
+            )}
+            {errors.existemail && (
+              <p className="control-error">This email is already registered</p>
             )}
           </div>
         ) : (
