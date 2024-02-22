@@ -1,11 +1,12 @@
 import UserForm from "./UserForm";
-const EditDetails = ({ handleEditChange, userDetails, onEditSave }) => {
+const EditDetails = ({ handleEditChange, userDetails, onPictureSelect }) => {
   return (
     <div>
       <UserForm
         onSubmit={handleEditChange}
         user={userDetails}
-        source="editDetails" // Pass onUpdate function to the form
+        source="editDetails"
+        onPictureSelect={onPictureSelect} // Pass onUpdate function to the form
       />
 
       <p>User details updated successfully!</p>

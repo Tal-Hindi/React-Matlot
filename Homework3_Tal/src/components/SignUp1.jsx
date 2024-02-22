@@ -1,9 +1,9 @@
 import UserForm from "./UserForm";
 
-const Signup1 = (props) => {
+const Signup1 = (onSignup) => {
   return (
     <div>
-      <UserForm onSubmit={props.handleSubmit} source="signup" />
+      <UserForm onSubmit={onSignup} source="signup" />
     </div>
   );
 };

@@ -1,7 +1,3 @@
-// import { useState } from "react";
-// import { userNameValidation, passwordValidation } from "../util/validation.js";
-// import Swal from "sweetalert2";
-
 export default function Login({
   onLogin,
   handleReset,

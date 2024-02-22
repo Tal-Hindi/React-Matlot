@@ -27,6 +27,95 @@ header img {
   border: 2px solid #758a8a;
   filter: drop-shadow(0 0 4px rgba(31, 42, 42, 0.5));
 }
+.profile-container {
+  width: 90%;
+  max-width: 40rem;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: linear-gradient(180deg, #253c3c, #1d4949);
+  border-radius: 8px;
+  box-shadow: 0 0 16px 1px rgba(0, 0, 0, 0.5);
+}
+
+.profile-heading {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.profile-heading h2 {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 700;
+  font-size: 2.5rem; /* Enlarged font size */
+  margin: 1rem 0;
+  letter-spacing: 0.2rem;
+  color: white;
+}
+
+.profile-details-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    2,
+    minmax(200px, 1fr)
+  ); /* Adjust the number of columns as needed */
+  gap: 1rem;
+}
+
+.profile-item {
+  display: flex;
+  align-items: center;
+}
+
+.profile-label {
+  font-weight: bold;
+  color: #9cbaba; /* Field text color */
+  font-size: 1.2rem; /* Enlarged font size */
+  margin-right: 0.5rem; /* Add space between label and value */
+}
+
+.profile-value {
+  color: #d9e2f1; /* Value text color */
+  font-size: 1.2rem; /* Enlarged font size */
+}
+
+.profile-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.button-profile {
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem; /* Enlarged font size */
+  border-radius: 4px;
+  border: none;
+  background-color: #147b73;
+  color: #d9e2f1;
+  cursor: pointer;
+}
+
+.button-profile:hover,
+.button-profile:focus {
+  background-color: #319890;
+}
+
+.preview-image {
+  width: 100px;
+  height: auto;
+  border-radius: 4px;
+}
+
+.preview-image {
+  width: 100px;
+  height: auto;
+  border-radius: 4px;
+}
+
+.preview-image {
+  width: 100px;
+  height: auto;
+  border-radius: 4px;
+}
 
 header h1 {
   font-family: "Quicksand", sans-serif;
@@ -227,26 +316,32 @@ fieldset {
 /* SystemAdmin.css */
 
 .admin-panel {
-  width: 90%;
   margin: 3rem auto;
   padding: 2rem;
   background: linear-gradient(180deg, #253c3c, #1d4949);
   border-radius: 8px;
   box-shadow: 0 0 16px 1px rgba(0, 0, 0, 0.5);
   color: #d9e2f1; /* Set text color to white */
+  text-align: center;
 }
 
 .admin-table {
-  width: auto; /* Set width to auto for dynamic sizing */
+  width: 100%; /* Set width to auto for dynamic sizing */
   border-collapse: collapse;
   margin-top: 1rem;
   table-layout: auto; /* Allow table to adjust its layout */
 }
 
+.table-container {
+  display: flex;
+  justify-content: center;
+  width: auto;
+}
+
 .admin-table th,
 .admin-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
+  border: 1px solid black;
+  padding: 10px;
   color: #d9e2f1; /* Set text color to white */
 }
 
@@ -254,6 +349,7 @@ fieldset {
   background-color: #f2f2f2;
   font-weight: bold;
   color: #253c3c; /* Set title text color */
+  width: auto;
 }
 
 .admin-btn {
@@ -270,4 +366,8 @@ fieldset {
 .admin-btn:hover,
 .admin-btn:focus {
   background-color: #319890;
+}
+.preview-image {
+  width: 100px; /* Set the width as per your requirement */
+  height: auto; /* Maintain aspect ratio */
 }

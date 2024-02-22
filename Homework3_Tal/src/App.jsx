@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Header from "./components/Header.jsx";
 import Login from "./components/Login.jsx";
 import Profile from "./components/Profile.jsx";
-import Signup1 from "./components/SignUp1.jsx";
+import Register from "./components/Register.jsx";
 import Swal from "sweetalert2";
 import { userNameValidation, passwordValidation } from "./util/validation.js";
 import loadUsers from "./util/loadUsers.js";
@@ -10,6 +10,7 @@ import EditDetails from "./components/EditDetails.jsx";
 import SystemAdmin from "./components/SystemAdmin.jsx";
 
 function App() {
+  //State Variables
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [enteredUserName, setUserName] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
@@ -19,20 +20,35 @@ function App() {
   const [foundUser, setFoundUser] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [isAdmin, setisAdmin] = useState(false);
+  const [hideLoginComp, sethideLoginComp] = useState(true);
+  const [hideRegisterComp, sethideRegisterComp] = useState(true);
+  const [selectedPicture, setSelectedPicture] = useState(null);
 
-  useEffect(() => {
-    console.log({ foundUser });
-  }, [foundUser]);
-
+  //toggleEditDetails Hide/Show~
   const toggleEdit = () => {
     setIsEdit((oldValue) => !oldValue);
   };
 
+  //// Load users and set initial state
   useEffect(() => {
     const loadedUsers = loadUsers();
     setAppUsers(loadedUsers);
+
+    const loggedInUserFromStorage = JSON.parse(
+      sessionStorage.getItem("loggedInUser")
+    );
+    if (loggedInUserFromStorage) {
+      setLoggedInUser(loggedInUserFromStorage);
+      setFoundUser(loggedInUserFromStorage);
+      sethideLoginComp(false);
+      sethideRegisterComp(false);
+      if (loggedInUserFromStorage.username == "admin") {
+        setisAdmin(true);
+      }
+    }
   }, []);
 
+  //Handle Submit-Login~
   function handleSubmitLogin(event) {
     event.preventDefault();
 
@@ -42,8 +58,11 @@ function App() {
     if (enteredUserName == "admin" && enteredPassword == "ad12343211ad") {
       setisAdmin(true);
       const adminUser = { username: "admin", password: "ad12343211ad" };
-      sessionStorage.setItem("loggedInUser", JSON.stringify(adminUser));
       setLoggedInUser(adminUser);
+      setFoundUser(adminUser);
+      sessionStorage.setItem("loggedInUser", JSON.stringify(adminUser));
+      sethideLoginComp(false);
+      sethideRegisterComp(false);
       setEnteredPassword("");
       setUserName("");
     } else {
@@ -56,7 +75,8 @@ function App() {
         setLoggedInUser(foundUser);
         setFoundUser(foundUser);
         sessionStorage.setItem("loggedInUser", JSON.stringify(foundUser));
-
+        sethideRegisterComp(false);
+        sethideLoginComp(false);
         setEnteredPassword("");
         setUserName("");
 
@@ -66,6 +86,7 @@ function App() {
           text: "You have successfully loggin.",
         });
       } else {
+        sethideLoginComp(true);
         Swal.fire({
           icon: "error",
           title: "Oops...",
@@ -75,29 +96,15 @@ function App() {
     }
   }
 
-  const renderAdminPanel = () => {
-    if (isAdmin) {
-      return <SystemAdmin users={appUser} />; // or whatever you want to render for the admin
-    } else if (foundUser) {
-      return (
-        <Profile
-          foundUser={foundUser}
-          logoutUser={logoutUser}
-          onEdit={toggleEdit}
-        />
-      );
-    } else {
-      return null; // Handle the case when foundUser is not available
-    }
-  };
-
+  // Handle changes in the username input field
   function handleUserNameChange(event) {
     setUserName(event.target.value);
   }
-
+  // Handle changes in the password input field
   function handlePasswordChange(event) {
     setEnteredPassword(event.target.value);
   }
+  // Reset form fields
   function handleReset(event) {
     event.preventDefault();
     setEnteredPassword("");
@@ -105,8 +112,8 @@ function App() {
     setuserNameError(false);
     setpasswordError(false);
   }
-
-  const handleSubmitSignUp = (formData) => {
+  // Handle registration form submission
+  const handleSubmitRegister = (formData) => {
     const existingUsers = appUser;
     const updatedUsers = [...existingUsers, formData];
     localStorage.setItem("users", JSON.stringify(updatedUsers));
@@ -119,20 +126,21 @@ function App() {
     });
   };
 
+  //LogOut User Function~
   const logoutUser = (email) => {
     setLoggedInUser(false);
     setFoundUser(null);
+    sethideLoginComp(true);
+    sethideRegisterComp(true);
 
-    const arrayFromStorage = loadUsers();
-    const indexToDelete = arrayFromStorage.findIndex(
-      (obj) => obj.email === email
-    );
-    arrayFromStorage.splice(indexToDelete, 1);
-    sessionStorage.setItem("registerdUsers", JSON.stringify(arrayFromStorage));
-    sessionStorage.clear();
+    const tempUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
+    if (tempUser && tempUser.email == email) {
+      sessionStorage.clear();
+    }
   };
 
-  const handleEditSave = (prev) => {
+  // Edit user details
+  const editUser = (prev) => {
     let updated = prev.map((u) => {
       if (u.email == editedUser.email) return editedUser;
       return u;
@@ -140,7 +148,7 @@ function App() {
     localStorage.setItem("users", JSON.stringify(updated));
     return updated;
   };
-
+  // Handle changes in user details
   const handleEditChange = (formData) => {
     const existingUsers = appUser;
     const userIndex = existingUsers.findIndex(
@@ -176,27 +184,105 @@ function App() {
     }
   };
 
+  // Handle picture selection
+  const handlePictureSelect = (picture) => {
+    // Update the selected picture state
+    setSelectedPicture(picture);
+  };
+  // Delete user
+  const deleteUser = (email) => {
+    // Find the index of the user to be deleted
+    const userIndex = appUser.findIndex((user) => user.email === email);
+
+    if (userIndex !== -1) {
+      // If user exists, remove it from the array
+      const updatedUsers = [
+        ...appUser.slice(0, userIndex),
+        ...appUser.slice(userIndex + 1),
+      ];
+      setAppUsers(updatedUsers);
+
+      // Update the local storage or any other database with the updated user list
+      localStorage.setItem("users", JSON.stringify(updatedUsers));
+
+      // Optionally, clear the session storage if the user being deleted is the logged-in user
+      const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
+      if (loggedInUser && loggedInUser.email === email) {
+        setLoggedInUser(null);
+        setFoundUser(null);
+        setisAdmin(false);
+        sessionStorage.clear();
+      }
+
+      // Optionally, show a confirmation message or perform any other necessary actions
+      console.log(`User with email ${email} has been deleted.`);
+    } else {
+      // Handle the case when the user with the provided email is not found
+      console.log(`User with email ${email} does not exist.`);
+    }
+  };
+
+  //Render AdminPanel Or User Profile Function~
+  const renderAdminPanelOrProfile = () => {
+    if (isAdmin) {
+      return (
+        <>
+          <Profile
+            foundUser={foundUser}
+            logoutUser={logoutUser}
+            onEdit={toggleEdit}
+          />
+          <SystemAdmin users={appUser} deleteUser={deleteUser} />{" "}
+        </>
+      ); // or whatever you want to render for the admin
+    } else if (foundUser) {
+      return (
+        <Profile
+          foundUser={foundUser}
+          logoutUser={logoutUser}
+          onEdit={toggleEdit}
+        />
+      );
+    } else {
+      return null; // Handle the case when foundUser is not available
+    }
+  };
+
   return (
     <>
       <Header />
       <main>
-        {<Signup1 handleSubmit={handleSubmitSignUp} />}
-        <Login
-          onLogin={handleSubmitLogin}
-          handleReset={handleReset}
-          handleUserNameChange={handleUserNameChange}
-          handlePasswordChange={handlePasswordChange}
-          enteredUserName={enteredUserName}
-          enteredPassword={enteredPassword}
-          userNameError={userNameError}
-          passwordError={passwordError}
-        />
-        {renderAdminPanel()}
+        {foundUser ? (
+          renderAdminPanelOrProfile()
+        ) : (
+          <>
+            {hideRegisterComp && (
+              <Register
+                handleSubmit={handleSubmitRegister}
+                onPictureSelect={handlePictureSelect}
+              />
+            )}
+            {hideLoginComp && (
+              <Login
+                onLogin={handleSubmitLogin}
+                handleReset={handleReset}
+                handleUserNameChange={handleUserNameChange}
+                handlePasswordChange={handlePasswordChange}
+                enteredUserName={enteredUserName}
+                enteredPassword={enteredPassword}
+                userNameError={userNameError}
+                passwordError={passwordError}
+              />
+            )}
+          </>
+        )}
+
         {isEdit ? (
           <EditDetails
             handleEditChange={handleEditChange}
-            handleEditSave={handleEditSave}
+            editUser={editUser}
             userDetails={foundUser}
+            onPictureSelect={handlePictureSelect}
           />
         ) : null}
       </main>

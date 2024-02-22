@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   firstNameValidation,
   housenumberValidation,
@@ -11,15 +11,13 @@ import {
   dateValidation,
 } from "../util/validation.js";
 
-const UserForm = ({ onSubmit, user, source }) => {
+const UserForm = ({ onSubmit, user, source, onPictureSelect }) => {
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({});
   const [imagePath, setImagePath] = useState(null);
+  const [pictureError, setPictureError] = useState("");
 
-  useEffect(() => {
-    console.log({ user });
-  }, [user]);
-
+  // Function to handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
     const fd = new FormData(event.target);
@@ -45,8 +43,8 @@ const UserForm = ({ onSubmit, user, source }) => {
     setErrors(newErrors);
 
     if (Object.values(newErrors).every((error) => !error)) {
-      // onSubmit(data);
-      const combinedData = { ...data, picture: imagePath.picture };
+      onPictureSelect(imagePath);
+      const combinedData = { ...data, picture: imagePath };
       onSubmit(combinedData);
 
       // Clear form and errors
@@ -57,18 +55,25 @@ const UserForm = ({ onSubmit, user, source }) => {
         ...prevFormData,
         picture: null,
       }));
+      setImagePath("");
     }
   };
+
+  // Function to handle image change
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
 
-    reader.onload = () => {
-      setImagePath(reader.result); // Set the image path to state
-    };
-
     if (file) {
-      reader.readAsDataURL(file);
+      if (!file.type.startsWith("image")) {
+        setPictureError("Please select a valid image file.");
+      } else {
+        setPictureError("");
+        reader.onload = () => {
+          setImagePath(reader.result); // Set the image path to state
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
 
@@ -169,7 +174,7 @@ const UserForm = ({ onSubmit, user, source }) => {
               type="email"
               id="email"
               name="email"
-              value={user.email}
+              value={user.email || ""}
               required
               readOnly
             />
@@ -242,6 +247,13 @@ const UserForm = ({ onSubmit, user, source }) => {
             required
           />
         </div>
+        {imagePath && (
+          <div className="image-preview">
+            <img src={imagePath} alt="Preview" className="preview-image" />
+          </div>
+        )}
+        {/* Display picture error */}
+        {pictureError && <p className="control-error">{pictureError}</p>}
       </fieldset>
       {/* For The Sign UP // */}
 
