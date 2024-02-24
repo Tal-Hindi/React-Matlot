@@ -105,15 +105,25 @@ const App = () => {
     return JSON.parse(sessionStorage.getItem('registerdUsers')) || [];
   }
 
+  const  deleteUser = (email) =>{
+
+    setAppUsers(()=> {
+      let deleteUserIndex =  appUsers.findIndex(user => user.email === email );
+      appUsers.splice(deleteUserIndex,1);
+      localStorage.setItem('users', JSON.stringify(appUsers));
+      return appUsers;
+    })
+  }
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xl">
         <CssBaseline />
         <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <Register registerUser={registerUser} />
+          <Register registerUser={registerUser} appUsers={appUsers} onEdit={handleEdit} />
           {isLoggedIn ? (
             <>
-              {isAdmin ? (<SystemAdmin appUsers={appUsers}/>) :
+              {isAdmin ? (<SystemAdmin appUsers={appUsers} deleteUser={deleteUser}/>) :
 
                 (<Profile foundUser={foundUser} logoutUser={logoutUser} onEdit={handleEdit} />)
 

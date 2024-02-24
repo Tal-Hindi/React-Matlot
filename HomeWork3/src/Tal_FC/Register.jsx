@@ -17,7 +17,7 @@ const city_options = data.default; // Access the default export from the importe
 
 const defaultTheme = createTheme();
 
-export default function Register(props) {
+const Register= ({registerUser, appUsers}) =>{
 
 //creating full details state
   const [userSignUpDetails, setUserSignUpDetails] = useState({
@@ -34,11 +34,7 @@ export default function Register(props) {
     houseNumber: ""
 })
 
-
-
 const [formErrors, setFormErrors] = useState({})
-
-
 
 const handleImageChange = (event) => {
   const file = event.target.files[0];
@@ -51,8 +47,6 @@ const handleImageChange = (event) => {
     }));
   };
 };
-
-
 
 const handleChange = (event) => {
 
@@ -74,7 +68,6 @@ const handleChangeCity = (e) =>{
 }));
 }
 
-
 const createNewUser = (event) => { 
   
   // Prevents the default form submission behavior
@@ -83,15 +76,39 @@ const createNewUser = (event) => {
   const errors = validate(userSignUpDetails);
     setFormErrors(errors);
 
-    // if there is no errors submit the form
-   if (Object.keys(errors).length === 0){
+  if(userSignUpDetails.email && appUsers.find(user => user.email === userSignUpDetails.email)){
+
+    setUserSignUpDetails({
+      username: "",
+      password: "",
+      passwordAuthentication: "",
+      picture: "",
+      firstname: "",
+      lastname: "",
+      email: "",
+      birthday: "",
+      city: "",
+      street: "",
+      houseNumber: ""
+    })
+
+    document.getElementById("option").value=""; 
+    
+    Swal.fire({
+      title: 'Email is already exists',
+      text: 'try to login',
+      icon: 'error'
+    });
+
+
+  } else if (Object.keys(errors).length === 0){
 
     // Create a new user object
     const newUser = {
         ...userSignUpDetails
     };
 
-    props.registerUser(newUser);
+    registerUser(newUser);
 
     // Get existing users from localStorage
     //const existingUsers = loadUsers();
@@ -107,7 +124,7 @@ const createNewUser = (event) => {
       text: "signed up successfully",
       icon: "success"
     });
-    
+  
     // Reset the form after successful registration
     setUserSignUpDetails({
       username: "",
@@ -124,9 +141,7 @@ const createNewUser = (event) => {
     })
 
     document.getElementById("option").innerHTML="";
-
   }
-
     
 }
 
@@ -197,8 +212,6 @@ const validateDate = (value) => {
     (age >= 18 && age <= 120) || "flase"
   );
 }
-
-
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -372,7 +385,7 @@ const validateDate = (value) => {
                   accept="image/jpeg"
                   id="picture"
                   type="file"
-                  onInput={handleImageChange}
+                  onChange={handleImageChange}
                   style={{ display: "none" }}
                 />
                 <label htmlFor="picture">
@@ -398,3 +411,4 @@ const validateDate = (value) => {
     </ThemeProvider>
   );
 }
+ export default Register

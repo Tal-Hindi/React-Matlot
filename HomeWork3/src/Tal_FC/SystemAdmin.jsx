@@ -10,10 +10,20 @@ import Paper from '@mui/material/Paper';
 import { Avatar } from '@mui/material';
 
 
-export default function SystemAdmin({appUsers}) {
+
+
+export default function SystemAdmin({appUsers, deleteUser, onEdit}) {
 
     const createData = (username, fullname, birthday, address, email, picture) => {
         return { username, fullname, birthday, address, email , picture};
+    }
+
+    const handleDeleteClick = (email) =>{
+        deleteUser(email);
+    }
+
+    const handleEditClick =() =>{
+        onEdit();
     }
 
     
@@ -41,6 +51,7 @@ export default function SystemAdmin({appUsers}) {
                         <TableCell align="right" style={{backgroundColor:"black", color:"white", fontWeight:"bold"}}>birthday</TableCell>
                         <TableCell align="right" style={{backgroundColor:"black", color:"white", fontWeight:"bold"}}>address</TableCell>
                         <TableCell align="right" style={{backgroundColor:"black", color:"white", fontWeight:"bold"}}>email</TableCell>
+                        <TableCell style={{backgroundColor:"black", color:"white", fontWeight:"bold"}}></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -55,6 +66,11 @@ export default function SystemAdmin({appUsers}) {
                             <TableCell align="right">{row.birthday}</TableCell>
                             <TableCell align="right">{row.address}</TableCell>
                             <TableCell align="right">{row.email}</TableCell>
+                            <TableCell>
+                                <button style={{backgroundColor:"red", color:'white'}} onClick={() => handleDeleteClick(row.email)}>Delete</button>
+                                <button style={{backgroundColor:"#1976D2", color:'white'}} onClick={handleEditClick}>Edit</button>
+                            </TableCell>
+
                         </TableRow>
                     ))}
                 </TableBody>
