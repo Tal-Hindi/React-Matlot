@@ -11,7 +11,10 @@ const Profile = ({ foundUser, logoutUser, onEdit }) => {
   return (
     <div className="profile-container">
       <div className="profile-heading">
-        <h2>User Profile</h2>
+        <h2>
+          {foundUser.firstname}
+          {foundUser.lastname}
+        </h2>
       </div>
       <div className="profile-details">
         {foundUser && (

@@ -6,6 +6,7 @@ export default function SystemAdmin({
   updateUser,
   deleteUser,
   onPictureSelect,
+  onEdit,
 }) {
   const [updateClicked, setupdateClicked] = useState(false);
   const [userToUpdate, setuserToUpdate] = useState(null);
@@ -18,6 +19,13 @@ export default function SystemAdmin({
   const handleUpdateUser = (user) => {
     setupdateClicked(false);
     updateUser(user);
+  };
+
+  const handleDeleteUser = (email) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      deleteUser(email);
+      setupdateClicked(false);
+    }
   };
 
   return (
@@ -72,7 +80,7 @@ export default function SystemAdmin({
                     </button>
                     <button
                       className="admin-btn"
-                      onClick={() => deleteUser(user.email)}
+                      onClick={() => handleDeleteUser(user.email)}
                     >
                       Delete
                     </button>

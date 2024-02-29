@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import EditDetails from "./components/EditDetails.jsx";
 import Header from "./components/Header.jsx";
 import Login from "./components/Login.jsx";
 import Profile from "./components/Profile.jsx";
 import Register from "./components/Register.jsx";
-import Swal from "sweetalert2";
-import { userNameValidation, passwordValidation } from "./util/validation.js";
-import loadUsers from "./util/loadUsers.js";
-import EditDetails from "./components/EditDetails.jsx";
 import SystemAdmin from "./components/SystemAdmin.jsx";
+import loadUsers from "./util/loadUsers.js";
+import { passwordValidation, userNameValidation } from "./util/validation.js";
 
 function App() {
   //State Variables
