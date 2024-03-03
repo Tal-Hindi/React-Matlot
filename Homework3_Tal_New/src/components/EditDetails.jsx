@@ -8,8 +8,6 @@ const EditDetails = ({ handleEditChange, userDetails, onPictureSelect }) => {
         source="editDetails"
         onPictureSelect={onPictureSelect}
       />
-
-      <p>User details updated successfully!</p>
     </div>
   );
 };

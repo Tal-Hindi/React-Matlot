@@ -97,7 +97,13 @@ const UserForm = ({ onSubmit, user, source, onPictureSelect, users }) => {
       {/* User name */}
       <div className="control">
         <label htmlFor="username">User name</label>
-        <input id="username" type="text" name="username" required />
+        <input
+          id="username"
+          type="text"
+          name="username"
+          defaultValue={user ? user.username : ""}
+          required
+        />
         {errors.username && (
           <p className="control-error">
             Username can only contain foreign letters, numbers, and special
@@ -109,7 +115,13 @@ const UserForm = ({ onSubmit, user, source, onPictureSelect, users }) => {
       <div className="control-row">
         <div className="control">
           <label htmlFor="password">Password</label>
-          <input id="password" type="password" name="password" required />
+          <input
+            id="password"
+            type="password"
+            name="password"
+            defaultValue={user ? user.password : ""}
+            required
+          />
           {errors.password && (
             <p className="control-error">
               Password must be between 7 and 12 characters long, and contain at
@@ -124,6 +136,7 @@ const UserForm = ({ onSubmit, user, source, onPictureSelect, users }) => {
             id="confirmpassword"
             type="password"
             name="confirmpassword"
+            defaultValue={user ? user.confirmpassword : ""}
             required
           />
           {errors.passwordAreNotEqual && (
@@ -136,7 +149,13 @@ const UserForm = ({ onSubmit, user, source, onPictureSelect, users }) => {
       <div className="control-row">
         <div className="control">
           <label htmlFor="firstname">First Name</label>
-          <input type="text" id="firstname" name="firstname" required />
+          <input
+            type="text"
+            id="firstname"
+            name="firstname"
+            defaultValue={user ? user.firstname : ""}
+            required
+          />
           {errors.firstname && (
             <p className="control-error">
               First Name must contain alphabetic characters only
@@ -146,7 +165,13 @@ const UserForm = ({ onSubmit, user, source, onPictureSelect, users }) => {
         {/* Last name */}
         <div className="control">
           <label htmlFor="lastname">Last Name</label>
-          <input type="text" id="lastname" name="lastname" required />
+          <input
+            type="text"
+            id="lastname"
+            name="lastname"
+            defaultValue={user ? user.lastname : ""}
+            required
+          />
           {errors.lastname && (
             <p className="control-error">
               Last Name must contain alphabetic characters only!
@@ -195,7 +220,13 @@ const UserForm = ({ onSubmit, user, source, onPictureSelect, users }) => {
         {/* Birthdate */}
         <div className="control">
           <label htmlFor="birthdate">Birth date</label>
-          <input type="date" id="birthdate" name="birthdate" required />
+          <input
+            type="date"
+            id="birthdate"
+            name="birthdate"
+            defaultValue={user ? user.birthdate : ""}
+            required
+          />
           {errors.birthdate && (
             <p className="control-error">
               Age must be between 18 and 120 years
@@ -210,7 +241,8 @@ const UserForm = ({ onSubmit, user, source, onPictureSelect, users }) => {
           list="cities"
           id="city"
           name="city"
-          autoComplete="off"
+          autoComplete="on"
+          defaultValue={user ? user.city : ""}
           required
         />
         <datalist id="cities">
@@ -228,7 +260,13 @@ const UserForm = ({ onSubmit, user, source, onPictureSelect, users }) => {
       <div className="control-row">
         <div className="control">
           <label htmlFor="street">Street</label>
-          <input type="text" id="street" name="street" required />
+          <input
+            type="text"
+            id="street"
+            name="street"
+            defaultValue={user ? user.street : ""}
+            required
+          />
           {errors.street && (
             <p className="control-error">Only Hebrew letters are allowed</p>
           )}
@@ -236,7 +274,13 @@ const UserForm = ({ onSubmit, user, source, onPictureSelect, users }) => {
         {/* HouseNumber */}
         <div className="control">
           <label htmlFor="housenumber">House number</label>
-          <input type="number" id="housenumber" name="housenumber" required />
+          <input
+            type="number"
+            id="housenumber"
+            name="housenumber"
+            defaultValue={user ? user.housenumber : ""}
+            required
+          />
           {errors.housenumber && (
             <p className="control-error">Must be a number</p>
           )}
